@@ -1,0 +1,27 @@
+{
+  "common": {
+    "appName": "Nikllas",
+    "tagline": "Temukan teman belajarmu.",
+    "description": "Cari atau buat sesi belajar bersama teman sekelas untuk menghadapi kuis, UTS, dan UAS.",
+    "continueAsGuest": "Lanjut sebagai tamu",
+    "guestNote": "Akun tamu tersimpan di browser ini. Nomor telepon tidak pernah ditampilkan.",
+    "loading": "Memuat...",
+    "retry": "Coba lagi",
+    "error": "Terjadi kesalahan. Silakan coba lagi.",
+    "language": "Bahasa",
+    "indonesian": "Indonesia",
+    "english": "English"
+  },
+  "nav": {
+    "explore": "Jelajah",
+    "mySessions": "Sesi saya",
+    "settings": "Pengaturan"
+  },
+  "feed": {
+    "title": "Sesi belajar",
+    "createSession": "Buat sesi",
+    "empty": "Belum ada sesi. Jadilah yang pertama!",
+    "noResults": "Tidak ada sesi yang cocok. Coba ubah filter.",
+    "clearFilters": "Hapus filter"
+  }
+}

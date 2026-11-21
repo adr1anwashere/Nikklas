@@ -1,0 +1,27 @@
+{
+  "common": {
+    "appName": "Nikllas",
+    "tagline": "Find your study people.",
+    "description": "Find or post study sessions with peers for quizzes, midterms, and finals.",
+    "continueAsGuest": "Continue as guest",
+    "guestNote": "Guest accounts live in this browser. Phone numbers are never shown.",
+    "loading": "Loading...",
+    "retry": "Try again",
+    "error": "Something went wrong. Please try again.",
+    "language": "Language",
+    "indonesian": "Indonesia",
+    "english": "English"
+  },
+  "nav": {
+    "explore": "Explore",
+    "mySessions": "My sessions",
+    "settings": "Settings"
+  },
+  "feed": {
+    "title": "Study sessions",
+    "createSession": "Create session",
+    "empty": "No sessions yet. Be the first!",
+    "noResults": "No matching sessions. Try changing filters.",
+    "clearFilters": "Clear filters"
+  }
+}
