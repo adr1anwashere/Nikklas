@@ -157,5 +157,17 @@
     "save": "Simpan Tempat",
     "saving": "Menyimpan...",
     "cancel": "Batal"
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "subtitle": "Kelola profil dan preferensi aplikasi",
+    "profileSection": "Profil Mahasiswa",
+    "languageSection": "Bahasa Aplikasi",
+    "languageDesc": "Pilih bahasa tampilan antarmuka",
+    "guestNoticeTitle": "Akun Tamu Prototipe",
+    "guestNoticeBody": "Akun tamu Anda tersimpan di peramban ini. Nomor telepon dan email asli Anda tidak pernah disimpan ataupun dibagikan. Verifikasi email resmi kampus (.ac.id) adalah langkah pengembangan berikutnya.",
+    "signOut": "Keluar dari Akun Tamu",
+    "signOutConfirm": "Apakah Anda yakin ingin keluar?",
+    "editProfile": "Ubah Profil"
   }
 }

@@ -157,5 +157,17 @@
     "save": "Save Place",
     "saving": "Saving...",
     "cancel": "Cancel"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your profile and preferences",
+    "profileSection": "Student Profile",
+    "languageSection": "Language",
+    "languageDesc": "Choose your interface display language",
+    "guestNoticeTitle": "Prototype Guest Account",
+    "guestNoticeBody": "Your guest account is stored in this browser. Real phone numbers and email addresses are never stored or shared. Verified campus email (.ac.id) sign-in is our next development phase.",
+    "signOut": "Sign Out of Guest Account",
+    "signOutConfirm": "Are you sure you want to sign out?",
+    "editProfile": "Edit Profile"
   }
 }

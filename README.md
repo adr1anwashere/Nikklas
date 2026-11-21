@@ -22,11 +22,17 @@ Nikllas is a mobile-friendly study-group finder built for Indonesian university 
    ```
    Fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` from your Supabase dashboard (Project Settings -> API).
 
-5. **Run the database migration:**
+5. **Run the database migration & enable Realtime:**
    Open Supabase **SQL Editor**, paste the contents of `supabase/migrations/20261121000000_initial_schema.sql`, and click **Run**.
+   Then enable Realtime for live chat and meeting place updates:
+   ```sql
+   alter publication supabase_realtime add table public.messages;
+   alter publication supabase_realtime add table public.meeting_places;
+   ```
 
-6. **Seed course data:**
+6. **Seed sample courses and demo sessions:**
    In Supabase **SQL Editor**, paste the contents of `supabase/seed.sql` and click **Run**.
+   *(To reset demo data before a real pilot, run the 1-line cleanup command at the top of `supabase/seed.sql`)*.
 
 7. **Start the development server:**
    ```bash
