@@ -123,5 +123,21 @@
     "findSessions": "Cari sesi di Jelajah",
     "roleHost": "Host",
     "roleMember": "Anggota"
+  },
+  "room": {
+    "title": "Ruang Sesi",
+    "membersTitle": "Anggota",
+    "chatTitle": "Obrolan",
+    "emptyChat": "Sapa teman belajarmu dulu.",
+    "typeMessage": "Tulis pesan ke teman belajarmu...",
+    "send": "Kirim",
+    "sending": "Mengirim...",
+    "notMemberTitle": "Ruang Sesi Terkunci",
+    "notMemberDesc": "Ruang obrolan ini hanya bisa diakses oleh mahasiswa yang sudah bergabung ke sesi ini.",
+    "joinSessionFirst": "Gabung ke sesi ini",
+    "backToFeed": "Kembali ke Jelajah",
+    "messageLimit": "Pesan maksimal 1000 karakter.",
+    "messageEmpty": "Pesan tidak boleh kosong.",
+    "meetingPlacePlaceholder": "Tempat pertemuan (akan hadir di Fase 5)"
   }
 }

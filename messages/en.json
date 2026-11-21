@@ -123,5 +123,21 @@
     "findSessions": "Explore sessions",
     "roleHost": "Host",
     "roleMember": "Member"
+  },
+  "room": {
+    "title": "Session Room",
+    "membersTitle": "Members",
+    "chatTitle": "Chat",
+    "emptyChat": "Say hello to your study partners first.",
+    "typeMessage": "Type a message to your study partners...",
+    "send": "Send",
+    "sending": "Sending...",
+    "notMemberTitle": "Private Session Room",
+    "notMemberDesc": "This room is private to members who have joined this study session.",
+    "joinSessionFirst": "Join this session",
+    "backToFeed": "Back to Explore",
+    "messageLimit": "Message cannot exceed 1000 characters.",
+    "messageEmpty": "Message cannot be empty.",
+    "meetingPlacePlaceholder": "Meeting place (coming in Phase 5)"
   }
 }
