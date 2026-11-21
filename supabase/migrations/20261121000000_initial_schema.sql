@@ -242,6 +242,10 @@ begin
     return json_build_object('success', false, 'error', 'session_not_found');
   end if;
 
+  if v_session.status = 'full' then
+    return json_build_object('success', false, 'error', 'session_full');
+  end if;
+
   if v_session.status != 'open' then
     return json_build_object('success', false, 'error', 'session_not_open');
   end if;

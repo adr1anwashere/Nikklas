@@ -54,6 +54,21 @@
     "futureTimeError": "Waktu mulai belajar harus di masa depan (minimal 1 menit dari sekarang).",
     "groupSizeError": "Kapasitas grup harus antara 2 sampai 8 orang."
   },
+  "filters": {
+    "title": "Filter Sesi",
+    "allCourses": "Semua MK",
+    "allPeriods": "Semua Periode",
+    "filterCourse": "Mata Kuliah",
+    "filterSection": "Kelas / Seksi",
+    "filterSectionPlaceholder": "Contoh: K01",
+    "filterExam": "Periode Ujian",
+    "filterTag": "Topik",
+    "filterTagPlaceholder": "Cari topik (contoh: integral)...",
+    "apply": "Terapkan Filter",
+    "clear": "Hapus Filter",
+    "activeCount": "{count} filter aktif",
+    "close": "Tutup"
+  },
   "session": {
     "createTitle": "Buat Sesi Belajar",
     "createSubtitle": "Ajak teman sekelas belajar bersama untuk persiapan ujian.",
@@ -63,8 +78,8 @@
     "sectionPlaceholder": "Contoh: K01",
     "examPeriodLabel": "Periode Ujian",
     "examPeriodQuiz": "Kuis",
-    "examPeriodUts": "UTS (Ujian Tengah Semester)",
-    "examPeriodUas": "UAS (Ujian Akhir Semester)",
+    "examPeriodUts": "UTS",
+    "examPeriodUas": "UAS",
     "dateTimeLabel": "Waktu Mulai Belajar",
     "dateTimeHint": "Waktu dalam jam lokal Anda",
     "groupSizeLabel": "Kapasitas Maksimal Grup",
@@ -73,12 +88,21 @@
     "postButton": "Posting Sesi",
     "posting": "Memposting sesi...",
     "joinButton": "Gabung",
+    "joining": "Bergabung...",
+    "openRoom": "Buka Ruang",
+    "alreadyMember": "Sudah Bergabung",
     "fullChip": "Penuh",
     "seatsLeft": "{seats} kursi tersisa",
     "seatsTaken": "{current}/{max} terisi",
     "hostBadge": "Host",
     "youAreHost": "Anda adalah Host",
-    "sessionPostedToast": "Sesi belajar berhasil diposting!"
+    "sessionPostedToast": "Sesi belajar berhasil diposting!",
+    "joinSuccess": "Berhasil bergabung ke sesi belajar!",
+    "alreadyJoined": "Anda sudah terdaftar di sesi ini.",
+    "groupFull": "Sesi ini sudah penuh.",
+    "statusOpen": "Terbuka",
+    "statusFull": "Penuh",
+    "statusClosed": "Selesai"
   },
   "feed": {
     "title": "Sesi belajar",
@@ -91,5 +115,13 @@
     "clearFilters": "Hapus filter",
     "editProfile": "Ubah profil",
     "signOut": "Keluar"
+  },
+  "mySessions": {
+    "title": "Sesi saya",
+    "subtitle": "Daftar sesi belajar yang Anda buat atau ikuti",
+    "empty": "Anda belum bergabung di sesi manapun.",
+    "findSessions": "Cari sesi di Jelajah",
+    "roleHost": "Host",
+    "roleMember": "Anggota"
   }
 }

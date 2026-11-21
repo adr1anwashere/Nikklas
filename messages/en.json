@@ -54,6 +54,21 @@
     "futureTimeError": "Study time must be in the future (at least 1 minute from now).",
     "groupSizeError": "Group capacity must be between 2 and 8 people."
   },
+  "filters": {
+    "title": "Filter Sessions",
+    "allCourses": "All Courses",
+    "allPeriods": "All Periods",
+    "filterCourse": "Course",
+    "filterSection": "Section",
+    "filterSectionPlaceholder": "e.g. K01",
+    "filterExam": "Exam Period",
+    "filterTag": "Topic",
+    "filterTagPlaceholder": "Search topic (e.g. integral)...",
+    "apply": "Apply Filters",
+    "clear": "Clear Filters",
+    "activeCount": "{count} active filters",
+    "close": "Close"
+  },
   "session": {
     "createTitle": "Create a Study Session",
     "createSubtitle": "Invite classmates to study together for upcoming exams.",
@@ -63,8 +78,8 @@
     "sectionPlaceholder": "e.g. K01",
     "examPeriodLabel": "Exam Period",
     "examPeriodQuiz": "Quiz",
-    "examPeriodUts": "UTS (Midterms)",
-    "examPeriodUas": "UAS (Finals)",
+    "examPeriodUts": "UTS",
+    "examPeriodUas": "UAS",
     "dateTimeLabel": "Start Date & Time",
     "dateTimeHint": "Time shown in your local timezone",
     "groupSizeLabel": "Max Group Capacity",
@@ -73,12 +88,21 @@
     "postButton": "Post Session",
     "posting": "Posting session...",
     "joinButton": "Join",
+    "joining": "Joining...",
+    "openRoom": "Open Room",
+    "alreadyMember": "Already Joined",
     "fullChip": "Full",
     "seatsLeft": "{seats} seats left",
     "seatsTaken": "{current}/{max} filled",
     "hostBadge": "Host",
     "youAreHost": "You are the Host",
-    "sessionPostedToast": "Study session posted successfully!"
+    "sessionPostedToast": "Study session posted successfully!",
+    "joinSuccess": "Successfully joined the study session!",
+    "alreadyJoined": "You are already a member of this session.",
+    "groupFull": "This session is already full.",
+    "statusOpen": "Open",
+    "statusFull": "Full",
+    "statusClosed": "Closed"
   },
   "feed": {
     "title": "Study sessions",
@@ -91,5 +115,13 @@
     "clearFilters": "Clear filters",
     "editProfile": "Edit profile",
     "signOut": "Sign out"
+  },
+  "mySessions": {
+    "title": "My sessions",
+    "subtitle": "Study sessions you host or joined",
+    "empty": "You have not joined any sessions yet.",
+    "findSessions": "Explore sessions",
+    "roleHost": "Host",
+    "roleMember": "Member"
   }
 }

@@ -7,13 +7,19 @@ import { SessionFeedItem } from '@/types/database';
 interface SessionCardProps {
   session: SessionFeedItem;
   currentUserId?: string;
+  isMember?: boolean;
+  isJoining?: boolean;
   onJoinClick?: (sessionId: string) => void;
+  onOpenRoomClick?: (sessionId: string) => void;
 }
 
 export default function SessionCard({
   session,
   currentUserId,
+  isMember = false,
+  isJoining = false,
   onJoinClick,
+  onOpenRoomClick,
 }: SessionCardProps) {
   const t = useTranslations('session');
   const locale = useLocale();
@@ -42,7 +48,7 @@ export default function SessionCard({
     quiz: t('examPeriodQuiz'),
     uts: 'UTS',
     uas: 'UAS',
-  }[session.exam_period];
+  }[session.exam_period] || session.exam_period.toUpperCase();
 
   return (
     <article className="bg-surface border border-border rounded-card p-5 shadow-card transition-all flex flex-col justify-between space-y-4">
@@ -53,15 +59,20 @@ export default function SessionCard({
             {session.course_code} {session.course_name}
           </h2>
           <p className="text-[14px] font-semibold text-primary-text">
-            {session.section}
+            Kelas {session.section}
           </p>
         </div>
 
         {/* Status / Host Badge */}
         <div className="flex flex-col items-end gap-1">
           {isHost && (
-            <span className="px-2.5 py-0.5 bg-primary/20 text-primary-text rounded-full text-[11px] font-bold">
+            <span className="px-2.5 py-0.5 bg-primary/25 text-primary-text rounded-full text-[11px] font-bold">
               {t('hostBadge')}
+            </span>
+          )}
+          {!isHost && isMember && (
+            <span className="px-2.5 py-0.5 bg-success-bg text-success-text rounded-full text-[11px] font-bold">
+              {t('alreadyMember')}
             </span>
           )}
           {isFull && (
@@ -104,20 +115,32 @@ export default function SessionCard({
 
       {/* 4. Action Button */}
       <div className="pt-1">
-        <button
-          type="button"
-          onClick={() => onJoinClick && onJoinClick(session.id)}
-          disabled={isFull || isHost}
-          className={`w-full h-11 rounded-control font-semibold text-[14px] transition-all flex items-center justify-center cursor-pointer ${
-            isHost
-              ? 'bg-bg text-muted border border-border cursor-default'
-              : isFull
-              ? 'bg-bg text-muted/60 border border-border cursor-not-allowed'
-              : 'bg-primary text-on-primary hover:opacity-90 active:scale-[0.99] shadow-xs'
-          }`}
-        >
-          {isHost ? t('youAreHost') : isFull ? t('fullChip') : t('joinButton')}
-        </button>
+        {isHost || isMember ? (
+          <button
+            type="button"
+            onClick={() => onOpenRoomClick && onOpenRoomClick(session.id)}
+            className="w-full h-11 bg-surface border-2 border-primary text-primary-text rounded-control font-semibold text-[14px] hover:bg-bg active:scale-[0.99] transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+          >
+            💬 {t('openRoom')}
+          </button>
+        ) : isFull ? (
+          <button
+            type="button"
+            disabled
+            className="w-full h-11 bg-bg text-muted/60 border border-border rounded-control font-semibold text-[14px] cursor-not-allowed flex items-center justify-center"
+          >
+            {t('fullChip')}
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => onJoinClick && onJoinClick(session.id)}
+            disabled={isJoining}
+            className="w-full h-11 bg-primary text-on-primary rounded-control font-semibold text-[14px] hover:opacity-90 active:scale-[0.99] disabled:opacity-50 shadow-xs transition-all flex items-center justify-center cursor-pointer"
+          >
+            {isJoining ? t('joining') : t('joinButton')}
+          </button>
+        )}
       </div>
     </article>
   );
