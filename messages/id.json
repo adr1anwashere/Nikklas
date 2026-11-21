@@ -4,6 +4,7 @@
     "tagline": "Temukan teman belajarmu.",
     "description": "Cari atau buat sesi belajar bersama teman sekelas untuk menghadapi kuis, UTS, dan UAS.",
     "continueAsGuest": "Lanjut sebagai tamu",
+    "enteringAsGuest": "Memproses...",
     "guestNote": "Akun tamu tersimpan di browser ini. Nomor telepon tidak pernah ditampilkan.",
     "loading": "Memuat...",
     "retry": "Coba lagi",
@@ -17,11 +18,45 @@
     "mySessions": "Sesi saya",
     "settings": "Pengaturan"
   },
+  "profile": {
+    "title": "Lengkapi profilmu",
+    "editTitle": "Ubah profil",
+    "subtitle": "Biar teman belajarmu tahu jurusan dan angkatanmu. Nomor telepon tidak pernah diminta.",
+    "nicknameLabel": "Nama panggilan",
+    "nicknamePlaceholder": "Contoh: Budi",
+    "majorLabel": "Jurusan / Program Studi",
+    "majorPlaceholder": "Contoh: Teknik Informatika",
+    "yearLabel": "Tahun / Angkatan",
+    "yearSelectPlaceholder": "Pilih tahun",
+    "yearOption": "Tahun ke-{year}",
+    "tagsLabel": "Topik yang sedang dipelajari",
+    "tagsCaption": "Maksimal 5 topik.",
+    "tagsPlaceholder": "Ketik topik (contoh: kalkulus)",
+    "addTag": "Tambah",
+    "tagLimitReached": "Maksimal 5 topik. Hapus salah satu untuk menambah topik baru.",
+    "tagAlreadyAdded": "Topik ini sudah ditambahkan.",
+    "tagEmpty": "Ketik nama topik terlebih dahulu.",
+    "saveAndContinue": "Simpan dan lanjut",
+    "saving": "Menyimpan...",
+    "saveSuccess": "Profil berhasil disimpan!"
+  },
+  "validation": {
+    "nicknameRequired": "Nama panggilan minimal 2 karakter.",
+    "nicknameMax": "Nama panggilan maksimal 30 karakter.",
+    "majorRequired": "Jurusan wajib diisi.",
+    "majorMax": "Jurusan maksimal 60 karakter.",
+    "yearRequired": "Pilih tahun angkatan (1-6).",
+    "tagsLimit": "Maksimal 5 topik diperbolehkan."
+  },
   "feed": {
     "title": "Sesi belajar",
+    "welcome": "Halo, {name}!",
+    "profileSummary": "Profil Anda",
     "createSession": "Buat sesi",
     "empty": "Belum ada sesi. Jadilah yang pertama!",
     "noResults": "Tidak ada sesi yang cocok. Coba ubah filter.",
-    "clearFilters": "Hapus filter"
+    "clearFilters": "Hapus filter",
+    "editProfile": "Ubah profil",
+    "signOut": "Keluar"
   }
 }

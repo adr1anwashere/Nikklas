@@ -4,6 +4,7 @@
     "tagline": "Find your study people.",
     "description": "Find or post study sessions with peers for quizzes, midterms, and finals.",
     "continueAsGuest": "Continue as guest",
+    "enteringAsGuest": "Processing...",
     "guestNote": "Guest accounts live in this browser. Phone numbers are never shown.",
     "loading": "Loading...",
     "retry": "Try again",
@@ -17,11 +18,45 @@
     "mySessions": "My sessions",
     "settings": "Settings"
   },
+  "profile": {
+    "title": "Set up your profile",
+    "editTitle": "Edit profile",
+    "subtitle": "So your study partners know your major and year. Phone numbers are never asked.",
+    "nicknameLabel": "Nickname",
+    "nicknamePlaceholder": "e.g. Alex",
+    "majorLabel": "Major / Field of Study",
+    "majorPlaceholder": "e.g. Computer Science",
+    "yearLabel": "Academic Year",
+    "yearSelectPlaceholder": "Select year",
+    "yearOption": "Year {year}",
+    "tagsLabel": "Topics you're studying",
+    "tagsCaption": "Maximum 5 topics.",
+    "tagsPlaceholder": "Type topic (e.g. calculus)",
+    "addTag": "Add",
+    "tagLimitReached": "Maximum 5 topics reached. Remove one to add a new topic.",
+    "tagAlreadyAdded": "This topic is already added.",
+    "tagEmpty": "Type a topic name first.",
+    "saveAndContinue": "Save and continue",
+    "saving": "Saving...",
+    "saveSuccess": "Profile saved successfully!"
+  },
+  "validation": {
+    "nicknameRequired": "Nickname must be at least 2 characters.",
+    "nicknameMax": "Nickname cannot exceed 30 characters.",
+    "majorRequired": "Major is required.",
+    "majorMax": "Major cannot exceed 60 characters.",
+    "yearRequired": "Please select an academic year (1-6).",
+    "tagsLimit": "Maximum 5 topics allowed."
+  },
   "feed": {
     "title": "Study sessions",
+    "welcome": "Hello, {name}!",
+    "profileSummary": "Your Profile",
     "createSession": "Create session",
     "empty": "No sessions yet. Be the first!",
     "noResults": "No matching sessions. Try changing filters.",
-    "clearFilters": "Clear filters"
+    "clearFilters": "Clear filters",
+    "editProfile": "Edit profile",
+    "signOut": "Sign out"
   }
 }

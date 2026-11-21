@@ -101,16 +101,19 @@ as $$
 $$;
 
 -- RLS Policies: Profiles
+drop policy if exists "Profiles are viewable by owner or co-members" on public.profiles;
 create policy "Profiles are viewable by owner or co-members"
   on public.profiles for select
   to authenticated
   using (auth.uid() = id or public.shares_session_with(id));
 
+drop policy if exists "Users can insert their own profile" on public.profiles;
 create policy "Users can insert their own profile"
   on public.profiles for insert
   to authenticated
   with check (auth.uid() = id);
 
+drop policy if exists "Users can update their own profile" on public.profiles;
 create policy "Users can update their own profile"
   on public.profiles for update
   to authenticated
@@ -118,12 +121,14 @@ create policy "Users can update their own profile"
   with check (auth.uid() = id);
 
 -- RLS Policies: Courses
+drop policy if exists "Courses are readable by all authenticated users" on public.courses;
 create policy "Courses are readable by all authenticated users"
   on public.courses for select
   to authenticated
   using (true);
 
 -- RLS Policies: Sessions
+drop policy if exists "Open and full sessions or user sessions are readable" on public.sessions;
 create policy "Open and full sessions or user sessions are readable"
   on public.sessions for select
   to authenticated
@@ -133,11 +138,13 @@ create policy "Open and full sessions or user sessions are readable"
     or public.is_room_member(id)
   );
 
+drop policy if exists "Hosts can insert sessions" on public.sessions;
 create policy "Hosts can insert sessions"
   on public.sessions for insert
   to authenticated
   with check (host_id = auth.uid());
 
+drop policy if exists "Hosts can update their own sessions" on public.sessions;
 create policy "Hosts can update their own sessions"
   on public.sessions for update
   to authenticated
@@ -145,22 +152,26 @@ create policy "Hosts can update their own sessions"
   with check (host_id = auth.uid());
 
 -- RLS Policies: Session Members
+drop policy if exists "Session members can view fellow members" on public.session_members;
 create policy "Session members can view fellow members"
   on public.session_members for select
   to authenticated
   using (public.is_room_member(session_id));
 
+drop policy if exists "Users can insert themselves as session members" on public.session_members;
 create policy "Users can insert themselves as session members"
   on public.session_members for insert
   to authenticated
   with check (user_id = auth.uid());
 
 -- RLS Policies: Messages
+drop policy if exists "Members can view room messages" on public.messages;
 create policy "Members can view room messages"
   on public.messages for select
   to authenticated
   using (public.is_room_member(session_id));
 
+drop policy if exists "Members can insert messages as themselves" on public.messages;
 create policy "Members can insert messages as themselves"
   on public.messages for insert
   to authenticated
@@ -170,16 +181,19 @@ create policy "Members can insert messages as themselves"
   );
 
 -- RLS Policies: Meeting Places
+drop policy if exists "Members can view meeting place" on public.meeting_places;
 create policy "Members can view meeting place"
   on public.meeting_places for select
   to authenticated
   using (public.is_room_member(session_id));
 
+drop policy if exists "Members can insert meeting place" on public.meeting_places;
 create policy "Members can insert meeting place"
   on public.meeting_places for insert
   to authenticated
   with check (public.is_room_member(session_id));
 
+drop policy if exists "Members can update meeting place" on public.meeting_places;
 create policy "Members can update meeting place"
   on public.meeting_places for update
   to authenticated
@@ -200,7 +214,8 @@ begin
 end;
 $$;
 
-create or replace trigger on_session_created
+drop trigger if exists on_session_created on public.sessions;
+create trigger on_session_created
   after insert on public.sessions
   for each row execute function public.handle_new_session();
 
