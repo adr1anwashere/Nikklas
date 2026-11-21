@@ -52,7 +52,10 @@
     "sectionRequired": "Please enter a section (e.g. K01).",
     "examPeriodRequired": "Please select an exam period.",
     "futureTimeError": "Study time must be in the future (at least 1 minute from now).",
-    "groupSizeError": "Group capacity must be between 2 and 8 people."
+    "groupSizeError": "Group capacity must be between 2 and 8 people.",
+    "descRequired": "Location description is required (min 2 characters).",
+    "descMax": "Location description cannot exceed 300 characters.",
+    "invalidHttps": "Map link must begin with https://"
   },
   "filters": {
     "title": "Filter Sessions",
@@ -137,7 +140,22 @@
     "joinSessionFirst": "Join this session",
     "backToFeed": "Back to Explore",
     "messageLimit": "Message cannot exceed 1000 characters.",
-    "messageEmpty": "Message cannot be empty.",
-    "meetingPlacePlaceholder": "Meeting place (coming in Phase 5)"
+    "messageEmpty": "Message cannot be empty."
+  },
+  "meetingPlace": {
+    "title": "Meeting Place",
+    "notSet": "No place chosen yet. Suggest one!",
+    "suggestPlace": "Suggest Place",
+    "editPlace": "Edit",
+    "openMap": "Open map",
+    "updatedBy": "Updated by {name}",
+    "descLabel": "Location / Description",
+    "descPlaceholder": "e.g. Central Library 2nd Floor, Table 12",
+    "mapLabel": "Map Link (Google Maps / OpenStreetMap)",
+    "mapPlaceholder": "https://maps.google.com/?q=...",
+    "mapHint": "Link must begin with https://",
+    "save": "Save Place",
+    "saving": "Saving...",
+    "cancel": "Cancel"
   }
 }

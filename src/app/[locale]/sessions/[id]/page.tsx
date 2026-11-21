@@ -3,6 +3,7 @@
 import React, { useState, useEffect, use } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
+import { createClient as createBrowserClient } from '@/lib/supabase/client';
 import { getCurrentUser, signInAsGuest, getUserProfile } from '@/lib/auth';
 import {
   fetchRoomDetails,
@@ -10,10 +11,15 @@ import {
   checkIsMember,
   RoomMember,
 } from '@/lib/chat';
+import {
+  fetchMeetingPlace,
+  MeetingPlaceWithAuthor,
+} from '@/lib/meeting-place';
 import { joinSession } from '@/lib/sessions';
-import { SessionFeedItem } from '@/types/database';
+import { SessionFeedItem, MeetingPlace } from '@/types/database';
 import LanguageSwitch from '@/components/LanguageSwitch';
 import MemberList from '@/components/MemberList';
+import MeetingPlaceCard from '@/components/MeetingPlaceCard';
 import ChatPanel from '@/components/ChatPanel';
 
 export default function SessionRoomPage({
@@ -34,6 +40,7 @@ export default function SessionRoomPage({
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [session, setSession] = useState<SessionFeedItem | null>(null);
   const [members, setMembers] = useState<RoomMember[]>([]);
+  const [meetingPlace, setMeetingPlace] = useState<MeetingPlaceWithAuthor | null>(null);
   const [isMember, setIsMember] = useState(false);
   const [isJoining, setIsJoining] = useState(false);
   const [isGuestSigningIn, setIsGuestSigningIn] = useState(false);
@@ -43,7 +50,6 @@ export default function SessionRoomPage({
       try {
         const user = await getCurrentUser();
         if (!user) {
-          // Unauthenticated visitor: stop loading and show lock screen with guest sign-in
           setIsMember(false);
           setIsLoading(false);
           return;
@@ -63,8 +69,12 @@ export default function SessionRoomPage({
         setIsMember(memberStatus);
 
         if (memberStatus) {
-          const memberList = await fetchRoomMembers(sessionId, sessionData.host_id);
+          const [memberList, placeData] = await Promise.all([
+            fetchRoomMembers(sessionId, sessionData.host_id),
+            fetchMeetingPlace(sessionId),
+          ]);
           setMembers(memberList);
+          setMeetingPlace(placeData);
         }
       } catch (err) {
         console.error('Error loading session room:', err);
@@ -75,6 +85,34 @@ export default function SessionRoomPage({
 
     loadRoom();
   }, [sessionId, router]);
+
+  // Realtime subscription for Meeting Place updates
+  useEffect(() => {
+    if (!isMember) return;
+
+    const supabase = createBrowserClient();
+    const channel = supabase
+      .channel(`realtime_mp_${sessionId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'meeting_places',
+          filter: `session_id=eq.${sessionId}`,
+        },
+        async () => {
+          // Re-fetch meeting place with author nickname
+          const updated = await fetchMeetingPlace(sessionId);
+          setMeetingPlace(updated);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [sessionId, isMember]);
 
   // Handle guest sign-in directly from the lock screen
   const handleGuestEntryFromLock = async () => {
@@ -88,14 +126,17 @@ export default function SessionRoomPage({
           return;
         }
         setCurrentUser(authData.user);
-        // Reload room details now that user is authenticated
         const sessionData = await fetchRoomDetails(sessionId);
         setSession(sessionData);
         const memberStatus = await checkIsMember(sessionId, authData.user.id);
         setIsMember(memberStatus);
         if (memberStatus && sessionData) {
-          const memberList = await fetchRoomMembers(sessionId, sessionData.host_id);
+          const [memberList, placeData] = await Promise.all([
+            fetchRoomMembers(sessionId, sessionData.host_id),
+            fetchMeetingPlace(sessionId),
+          ]);
           setMembers(memberList);
+          setMeetingPlace(placeData);
         }
       }
     } catch (err) {
@@ -112,8 +153,12 @@ export default function SessionRoomPage({
       if (res.success || res.error === 'already_joined') {
         setIsMember(true);
         if (session) {
-          const updatedMembers = await fetchRoomMembers(sessionId, session.host_id);
+          const [updatedMembers, placeData] = await Promise.all([
+            fetchRoomMembers(sessionId, session.host_id),
+            fetchMeetingPlace(sessionId),
+          ]);
           setMembers(updatedMembers);
+          setMeetingPlace(placeData);
         }
       } else {
         alert(res.error === 'session_full' ? tSession('groupFull') : tCommon('error'));
@@ -272,13 +317,12 @@ export default function SessionRoomPage({
       {/* Member List */}
       <MemberList members={members} maxSize={session.max_size} />
 
-      {/* Meeting Place Card Placeholder (Phase 5) */}
-      <div className="bg-surface border border-border rounded-card p-3 shadow-xs flex items-center justify-between text-[13px]">
-        <div className="flex items-center gap-2 text-muted">
-          <span>📍</span>
-          <span>{t('meetingPlacePlaceholder')}</span>
-        </div>
-      </div>
+      {/* Meeting Place Card */}
+      <MeetingPlaceCard
+        sessionId={sessionId}
+        meetingPlace={meetingPlace}
+        onUpdated={(updated) => setMeetingPlace(updated)}
+      />
 
       {/* Live Realtime Chat Panel */}
       <ChatPanel

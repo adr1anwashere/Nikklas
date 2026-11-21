@@ -52,7 +52,10 @@
     "sectionRequired": "Isi kelas / seksi (contoh: K01).",
     "examPeriodRequired": "Pilih periode ujian.",
     "futureTimeError": "Waktu mulai belajar harus di masa depan (minimal 1 menit dari sekarang).",
-    "groupSizeError": "Kapasitas grup harus antara 2 sampai 8 orang."
+    "groupSizeError": "Kapasitas grup harus antara 2 sampai 8 orang.",
+    "descRequired": "Deskripsi lokasi wajib diisi (minimal 2 karakter).",
+    "descMax": "Deskripsi lokasi maksimal 300 karakter.",
+    "invalidHttps": "Tautan peta harus diawali dengan https://"
   },
   "filters": {
     "title": "Filter Sesi",
@@ -137,7 +140,22 @@
     "joinSessionFirst": "Gabung ke sesi ini",
     "backToFeed": "Kembali ke Jelajah",
     "messageLimit": "Pesan maksimal 1000 karakter.",
-    "messageEmpty": "Pesan tidak boleh kosong.",
-    "meetingPlacePlaceholder": "Tempat pertemuan (akan hadir di Fase 5)"
+    "messageEmpty": "Pesan tidak boleh kosong."
+  },
+  "meetingPlace": {
+    "title": "Tempat Pertemuan",
+    "notSet": "Belum ada tempat. Usulkan satu!",
+    "suggestPlace": "Usulkan Tempat",
+    "editPlace": "Ubah",
+    "openMap": "Buka peta",
+    "updatedBy": "Diperbarui oleh {name}",
+    "descLabel": "Lokasi / Deskripsi Tempat",
+    "descPlaceholder": "Contoh: Perpustakaan Pusat Lantai 2, Meja 12",
+    "mapLabel": "Tautan Peta (Google Maps / OpenStreetMap)",
+    "mapPlaceholder": "https://maps.google.com/?q=...",
+    "mapHint": "Tautan harus diawali dengan https://",
+    "save": "Simpan Tempat",
+    "saving": "Menyimpan...",
+    "cancel": "Batal"
   }
 }
