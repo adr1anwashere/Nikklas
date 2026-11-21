@@ -31,6 +31,7 @@
     "yearSelectPlaceholder": "Select year",
     "yearOption": "Year {year}",
     "tagsLabel": "Topics you're studying",
+    "topicsLabel": "Topics you're studying",
     "tagsCaption": "Maximum 5 topics.",
     "tagsPlaceholder": "Type topic (e.g. calculus)",
     "addTag": "Add",

@@ -31,6 +31,7 @@
     "yearSelectPlaceholder": "Pilih tahun",
     "yearOption": "Tahun ke-{year}",
     "tagsLabel": "Topik yang sedang dipelajari",
+    "topicsLabel": "Topik yang sedang dipelajari",
     "tagsCaption": "Maksimal 5 topik.",
     "tagsPlaceholder": "Ketik topik (contoh: kalkulus)",
     "addTag": "Tambah",

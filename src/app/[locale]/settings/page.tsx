@@ -125,7 +125,7 @@ export default function SettingsPage() {
               {profile.topic_tags && profile.topic_tags.length > 0 && (
                 <div className="space-y-1.5 pt-1 border-t border-border/60">
                   <span className="text-[12px] font-semibold text-muted">
-                    {tProfile('topicsLabel')}
+                    {tProfile('tagsLabel')}
                   </span>
                   <div className="flex flex-wrap gap-1.5 pt-0.5">
                     {profile.topic_tags.map((tag) => (
