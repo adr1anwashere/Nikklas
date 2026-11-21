@@ -3,7 +3,7 @@
 import React, { useState, useEffect, use } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser, signInAsGuest, getUserProfile } from '@/lib/auth';
 import {
   fetchRoomDetails,
   fetchRoomMembers,
@@ -36,13 +36,16 @@ export default function SessionRoomPage({
   const [members, setMembers] = useState<RoomMember[]>([]);
   const [isMember, setIsMember] = useState(false);
   const [isJoining, setIsJoining] = useState(false);
+  const [isGuestSigningIn, setIsGuestSigningIn] = useState(false);
 
   useEffect(() => {
     async function loadRoom() {
       try {
         const user = await getCurrentUser();
         if (!user) {
-          router.replace('/');
+          // Unauthenticated visitor: stop loading and show lock screen with guest sign-in
+          setIsMember(false);
+          setIsLoading(false);
           return;
         }
         setCurrentUser(user);
@@ -73,6 +76,35 @@ export default function SessionRoomPage({
     loadRoom();
   }, [sessionId, router]);
 
+  // Handle guest sign-in directly from the lock screen
+  const handleGuestEntryFromLock = async () => {
+    setIsGuestSigningIn(true);
+    try {
+      const authData = await signInAsGuest();
+      if (authData.user) {
+        const profile = await getUserProfile(authData.user.id);
+        if (!profile) {
+          router.push('/setup');
+          return;
+        }
+        setCurrentUser(authData.user);
+        // Reload room details now that user is authenticated
+        const sessionData = await fetchRoomDetails(sessionId);
+        setSession(sessionData);
+        const memberStatus = await checkIsMember(sessionId, authData.user.id);
+        setIsMember(memberStatus);
+        if (memberStatus && sessionData) {
+          const memberList = await fetchRoomMembers(sessionId, sessionData.host_id);
+          setMembers(memberList);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to sign in as guest:', err);
+    } finally {
+      setIsGuestSigningIn(false);
+    }
+  };
+
   const handleJoinDirectly = async () => {
     setIsJoining(true);
     try {
@@ -102,12 +134,9 @@ export default function SessionRoomPage({
     );
   }
 
-  if (!session) {
-    return null;
-  }
-
   // Format start time
   const formattedTime = (() => {
+    if (!session) return '';
     try {
       const d = new Date(session.starts_at);
       return new Intl.DateTimeFormat(locale === 'id' ? 'id-ID' : 'en-US', {
@@ -122,13 +151,15 @@ export default function SessionRoomPage({
     }
   })();
 
-  const examLabel = {
-    quiz: tSession('examPeriodQuiz'),
-    uts: 'UTS',
-    uas: 'UAS',
-  }[session.exam_period] || session.exam_period.toUpperCase();
+  const examLabel = session
+    ? {
+        quiz: tSession('examPeriodQuiz'),
+        uts: 'UTS',
+        uas: 'UAS',
+      }[session.exam_period] || session.exam_period.toUpperCase()
+    : '';
 
-  // Non-member Access Notice (Privacy Gate)
+  // Non-member or Unauthenticated Access Notice (Privacy Gate)
   if (!isMember) {
     return (
       <div className="flex flex-col justify-between min-h-[calc(100vh-2rem)]">
@@ -153,14 +184,25 @@ export default function SessionRoomPage({
           </p>
 
           <div className="pt-2 flex flex-col gap-2">
-            <button
-              type="button"
-              onClick={handleJoinDirectly}
-              disabled={isJoining}
-              className="w-full h-11 bg-primary text-on-primary font-semibold text-[14px] rounded-control hover:opacity-90 active:scale-95 transition-all shadow-xs cursor-pointer flex items-center justify-center"
-            >
-              {isJoining ? tSession('joining') : t('joinSessionFirst')}
-            </button>
+            {!currentUser ? (
+              <button
+                type="button"
+                onClick={handleGuestEntryFromLock}
+                disabled={isGuestSigningIn}
+                className="w-full h-11 bg-primary text-on-primary font-semibold text-[14px] rounded-control hover:opacity-90 active:scale-95 transition-all shadow-xs cursor-pointer flex items-center justify-center"
+              >
+                {isGuestSigningIn ? tCommon('enteringAsGuest') : tCommon('continueAsGuest')}
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleJoinDirectly}
+                disabled={isJoining}
+                className="w-full h-11 bg-primary text-on-primary font-semibold text-[14px] rounded-control hover:opacity-90 active:scale-95 transition-all shadow-xs cursor-pointer flex items-center justify-center"
+              >
+                {isJoining ? tSession('joining') : t('joinSessionFirst')}
+              </button>
+            )}
             <button
               type="button"
               onClick={() => router.push('/feed')}
@@ -172,6 +214,10 @@ export default function SessionRoomPage({
         </div>
       </div>
     );
+  }
+
+  if (!session) {
+    return null;
   }
 
   return (
