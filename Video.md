@@ -1,111 +1,138 @@
-# Nikllas — Semifinal Video Script & Presentation Guide
+# Nikllas — Semifinal Video Script & Presentation Guide (4-Speaker Revision)
 
 **Competition:** STACK 2026 (GDGoC ITB)  
 **Track:** Case 1 — Smarter Campus and Learning  
 **Team Name:** Satu Orang Satu Ubin  
 **Product Name:** Nikllas  
 **Max Duration:** 2 Minutes (120 seconds)  
-**Language:** English (Official competition language)  
-**Visual Format:** Slide presentation + UI wireframe / mockup animations (No live production application shown)
+**Target Duration:** ~1 Minute 50 Seconds (Leaves a 10-second buffer under the 2:00 limit)  
+**Format:** English voiceover, hardcoded English subtitles, 1080p minimum resolution  
+**Visual Style:** Concept presentation slides + Figma UI mockups/wireframes (No live application shown)
 
 ---
 
-## 1. Product Abstract
+## 1. Official Video Assessment Rubric Mapping
+
+According to the **STACK 2026 Handbook (Video Assessment Rubric, p. 16)**, the video is evaluated on the following 5 criteria. This script is strictly partitioned among **4 team members**, with each member taking ownership of one primary rubric criterion:
+
+| Speaker | Assigned Rubric Criterion | Rubric Weight | Time Allocation | Word Count |
+|---|---|---|---|---|
+| **Person 1** | **Criterion 1: Team & Context Introduction**<br>Clear and concise introduction of the team, project, selected case, and relevant problem context. | 15% | 0:00 – 0:20 (20s) | ~48 words |
+| **Person 2** | **Criterion 2: Problem & Solution Explanation**<br>Clarity in explaining the identified problem, target users, proposed solution, and expected benefits. | 25% | 0:20 – 0:46 (26s) | ~64 words |
+| **Person 3** | **Criterion 3: User Flow / Prototype Showcase**<br>Effectiveness in visually demonstrating the main user journey, proposed workflow, or early prototype, including how users interact with the solution. | 30% | 0:46 – 1:24 (38s) | ~94 words |
+| **Person 4** | **Criterion 4: Progress Honesty & Next Steps**<br>Clear distinction between completed features and planned development, along with a realistic explanation of remaining tasks. | 20% | 1:24 – 1:50 (26s) | ~68 words |
+| **All Team** | **Criterion 5: English & Production Quality**<br>Understandable English narration/subtitles, clear audio, readable visuals, effective pacing, and 2-minute compliance. | 10% | Applied across all 4 sections | Total: ~274 words |
+
+---
+
+## 2. Product Abstract
 
 > **Nikllas** is a lightweight, privacy-first peer study-group matchmaking platform designed for Indonesian university students. In large lecture classes, commuter students, newcomers, and introverted learners frequently struggle with the "cold-start" social friction of finding study partners for quizzes, midterms (UTS), and finals (UAS). Nikllas eliminates this barrier through course-specific and exam-targeted session discovery, zero-friction guest entry, strict privacy boundaries (displaying only nicknames, academic year, and major without revealing phone numbers or emails), and atomic seat-reservation mechanics to ensure groups never exceed manageable study limits.
 
 ---
 
-## 2. Video Technical Specifications
+## 3. Four-Person Spoken Script (Word-for-Word)
 
-| Parameter | Specification | Rule Reference |
-|---|---|---|
-| **Maximum Duration** | 1 minute 55 seconds (Leaves 5-second safety buffer under 2:00) | Handbook p. 11 & 12 |
-| **Resolution** | 1080p Full HD (1920 × 1080), 30 or 60 fps | Handbook p. 11 |
-| **Audio** | Clear English voiceover + soft, royalty-free background music | Handbook p. 11 |
-| **Subtitles** | English subtitles hardcoded at bottom center | Handbook p. 11 |
-| **Visual Approach** | Concept slides, user journey diagrams, and Figma UI mockups | Conforms to rule: *early prototype / mockups* |
+```
+================================================================================
+PART 1: TEAM & CONTEXT INTRODUCTION (0:00 – 0:20 | ~20 Seconds)
+Speaker: PERSON 1
+Rubric Focus: Team & Context Introduction (15% Weight)
+Visuals: Slide 1 (Title slide with STACK 2026 logo, Team Name "Satu Orang Satu Ubin", 
+         Case 1: Smarter Campus and Learning, and Nikllas brand mark) 
+         followed by Slide 2 (Graphic of 300-student lecture hall & isolated commuter student).
+================================================================================
+```
 
----
-
-## 3. Storyboard & Timing Breakdown
-
-| Timecode | Segment | On-Screen Visuals | Voiceover Focus |
-|---|---|---|---|
-| **0:00 – 0:18** | **Team Intro & Problem** | Title slide: Team *Satu Orang Satu Ubin*, Nikllas logo.<br>Graphic showing isolated student vs. 300-student lecture hall. | Introduce team and define the isolation problem among commuter and first-year university students. |
-| **0:18 – 0:38** | **Product Introduction** | Product concept slide: *"Nikllas: Find Your Study People"*, 3 pillar icons (Course-based, Low-friction, Safe). | Introduce Nikllas, value proposition, and why informal social media groups fail for quiet students. |
-| **0:38 – 1:18** | **Core User Flow (UI Mockups)** | Animated Figma mockups / UI wireframe walkthrough:<br>1. Quick profile setup (No phone number)<br>2. Filtered feed by course & exam (Kuis/UTS)<br>3. Atomic 1-tap join flow<br>4. Private study room & agreed meeting location. | Step-by-step walkthrough of the user journey from discovering a session to coordinating a study spot. |
-| **1:18 – 1:45** | **Current State vs. Final Day Plan** | Split screen / Architecture roadmap diagram:<br>• **Current State (Validated):** System architecture, data schemas, UI design system, concurrency logic.<br>• **Final Day Build Tasks:** Verified `.ac.id` email login, student moderation/reporting, automated calendar sync. | Explicitly address the competition requirement: what is designed today vs. what substantive tasks remain for the Final Day build session. |
-| **1:45 – 1:55** | **Closing & Impact** | Summary slide with team contact & STACK 2026 logo. | Final impactful sentence connecting the solution to student success and psychological safety. |
-
----
-
-## 4. Word-for-Word Spoken Script (English)
-
-### Section 1: Introduction and Problem (0:00 – 0:18)
-> *"Hello judges and mentors of STACK 2026. We are Team Satu Orang Satu Ubin, and this is Nikllas.*  
-> *Every semester, thousands of Indonesian university students—especially freshmen and daily commuters—face a silent struggle: studying alone. In massive classes with hundreds of peers, asking strangers for study partners in chaotic WhatsApp groups feels intimidating, high-pressure, and socially risky."*
-
----
-
-### Section 2: The Solution & Product Concept (0:18 – 0:38)
-> *"To solve this, we created **Nikllas**: a focused, privacy-conscious study-group matchmaking platform built specifically around courses, sections, and exam periods.*  
-> *Nikllas removes social anxiety by replacing high-friction friend requests with structured, course-aligned study sessions—ensuring no student has to prepare for an exam in isolation."*
-
----
-
-### Section 3: The Proposed User Flow (0:38 – 1:18)
-*(Show animated Figma screens / UI mockups)*
-
-> *"Here is how Nikllas works from the student's perspective:*  
+> **[PERSON 1]:**  
+> *"Hello judges and mentors of STACK 2026. We are Team Satu Orang Satu Ubin, presenting for Case 1: Smarter Campus and Learning.*  
 > 
-> *First, **Zero-Friction Entry**: Students can immediately set up a minimal academic profile—just a nickname, major, year, and subject topics. Phone numbers and personal contact information are never collected or exposed.*  
-> 
-> *Second, **Targeted Discovery**: Instead of endless scrolling, students filter study groups by specific course codes—like Calculus or Basic Physics—and exam periods like Midterms or Quizzes.*  
-> 
-> *Third, **One-Tap Capacity-Controlled Joining**: Group sizes are strictly capped between two to eight students. Once a session fills, it automatically closes, preventing overcrowded or unproductive groups.*  
-> 
-> *Finally, **Coordination Room**: Enrolled members enter a private session space to align on discussion agendas and confirm a physical meeting spot—such as a campus library table or gazebo—linked directly to Google Maps."*
+> *In Indonesian universities, thousands of freshmen and commuter students face a persistent academic barrier: studying in isolation due to large class sizes and disconnected campus networks."*
 
 ---
 
-### Section 4: Current Progress & Final Day Plan (1:18 – 1:45)
-*(Show System Architecture & Roadmap Diagram)*
+```
+================================================================================
+PART 2: PROBLEM & SOLUTION EXPLANATION (0:20 – 0:46 | ~26 Seconds)
+Speaker: PERSON 2
+Rubric Focus: Problem & Solution Explanation (25% Weight)
+Visuals: Slide 3 (Infographic contrasting chaotic 300-person WhatsApp groups vs. student anxiety) 
+         transitioning to Slide 4 (Product introduction: Nikllas value proposition, 3 pillars: 
+         Course-Targeted, Privacy-First, Atomic Group Limits).
+================================================================================
+```
 
-> *"At this semifinal stage, we have established our complete system architecture, defined the relational database schemas with Row Level Security, and validated our core user interface design and concurrency requirements.*  
+> **[PERSON 2]:**  
+> *"Our target users are students preparing for exams who lack established social circles. Currently, asking strangers in chaotic 300-person class chats causes high social anxiety and rarely yields balanced study groups.*  
 > 
-> *For the Final Day build session, we have planned three substantive implementation milestones:*  
-> *1. Integrating verified institutional `.ac.id` campus single sign-on,*  
-> *2. Implementing student moderation and report-handling mechanisms to safeguard psychological comfort, and*  
-> *3. Building automated session reminders and calendar export integrations."*
+> *Our solution is **Nikllas**: a focused peer study-group finder that matches students by course code and exam period, cutting search friction from days to seconds while protecting student privacy."*
 
 ---
 
-### Section 5: Conclusion (1:45 – 1:55)
-> *"With Nikllas, finding academic support is simple, respectful, and accessible to every student. Thank you, and we look forward to bringing Nikllas to life at STACK 2026!"*
+```
+================================================================================
+PART 3: USER FLOW & PROTOTYPE SHOWCASE (0:46 – 1:24 | ~38 Seconds)
+Speaker: PERSON 3
+Rubric Focus: User Flow / Prototype Showcase (30% Weight — Highest Score!)
+Visuals: Figma mobile mockup walkthrough with clean transitions:
+         • Mockup A: Rapid student profile setup (nickname, major, year, tags — NO phone/email).
+         • Mockup B: Filtered feed displaying courses (Calculus, Physics) and exam chips (Quiz, UTS).
+         • Mockup C: Realtime seat counter and 1-tap atomic join button.
+         • Mockup D: Private group coordination space with embedded Google Maps meeting place.
+================================================================================
+```
+
+> **[PERSON 3]:**  
+> *(Show Mockup A)*  
+> *"Here is how students interact with our prototype.*  
+> *First, students set a lightweight academic profile—nickname, major, and year—without exposing sensitive phone numbers or personal emails.*  
+> 
+> *(Show Mockup B & C)*  
+> *Next, learners filter the feed by course code and upcoming exam period. Groups are strictly capped at two to eight members, with atomic capacity locks that automatically close full sessions.*  
+> 
+> *(Show Mockup D)*  
+> *Finally, enrolled peers enter a private room to coordinate agendas and agree on a physical meeting place, linked directly to Google Maps."*
 
 ---
 
-## 5. Visual Asset Guidelines (What to Show on Screen)
+```
+================================================================================
+PART 4: PROGRESS HONESTY & NEXT STEPS (1:24 – 1:50 | ~26 Seconds)
+Speaker: PERSON 4
+Rubric Focus: Progress Honesty & Next Steps (20% Weight) + Conclusion
+Visuals: Slide 5 (Dual Roadmap diagram: "Current Validated Foundations" on the left vs. 
+         "Planned Final Day Build Milestones" highlighted on the right) 
+         followed by Slide 6 (Closing slide with team acknowledgment).
+================================================================================
+```
 
-To avoid any rule-breaking concerns while keeping the video visually engaging:
-
-1. **Do NOT show:**
-   - Production browser address bar (`localhost:3000` or live Vercel URL).
-   - Code editors (VS Code / terminal).
-   - Live browser interactions that look like a completed commercial release.
-
-2. **DO show:**
-   - **Slide 1:** Clean title slide with STACK 2026 logo, Team Name (*Satu Orang Satu Ubin*), and Case 1 tag.
-   - **Slide 2:** Infographic depicting the student pain point: *"Why do 60%+ of commuter students study alone?"*
-   - **Slide 3:** Product Architecture Diagram (Client $\rightarrow$ Auth Layer $\rightarrow$ Relational Schema & Row Level Security).
-   - **Slide 4 to 7 (Figma Mockups):** Clean mobile device frames displaying the UI wireframes/screens with smooth pan or click-through animations.
-   - **Slide 8:** Roadmap table clearly distinguishing **"Current Progress (Design & Specification)"** from **"Final Day Build Deliverables"**.
+> **[PERSON 4]:**  
+> *"To ensure progress honesty: in this semifinal stage, we have established our complete system architecture, relational database schemas with Row Level Security, and validated our core interaction mockups.*  
+> 
+> *For the Final Day build session, our remaining tasks are: integrating verified institutional `.ac.id` single sign-on, implementing student safety reporting mechanisms, and building automated calendar reminders.*  
+> 
+> *Thank you from Team Satu Orang Satu Ubin!"*
 
 ---
 
-## 6. Word Count & Pacing Verification
+## 4. Speaker Timing & Recording Quick Reference
 
-- **Total Spoken Word Count:** ~280 words.
-- **Average Speaking Pace:** 140–145 words per minute (standard natural conversational pace).
-- **Estimated Runtime:** **1 minute 52 seconds** (perfectly within the 2:00 limit).
+| Speaker | Section Title | Word Count | Speaking Time | Breathing & Transition Buffer |
+|---|---|---|---|---|
+| **Person 1** | Team & Problem Context | 48 words | ~20 sec | 0:00 &rarr; 0:20 |
+| **Person 2** | Problem & Solution Details | 64 words | ~26 sec | 0:20 &rarr; 0:46 |
+| **Person 3** | Prototype & User Flow Showcase | 94 words | ~38 sec | 0:46 &rarr; 1:24 |
+| **Person 4** | Progress Honesty & Final Day Plan | 68 words | ~26 sec | 1:24 &rarr; 1:50 |
+| **Buffer** | Outro fade & visual title card | — | ~10 sec | 1:50 &rarr; 2:00 (Safe finish!) |
+| **Total** | | **274 words** | **1 min 50 sec** | **Under 2-min limit** |
+
+---
+
+## 5. Production & Rubric Checklist Before Submission
+
+- [ ] **1080p Resolution:** Video exported at minimum 1920 × 1080.
+- [ ] **Hardcoded Subtitles:** English subtitles rendered at bottom-center with high contrast (white text with dark outline/box).
+- [ ] **Voice Levels:** Normalize audio across all 4 speakers so volume remains consistent when switching voices.
+- [ ] **Strict Time Limit:** Ensure final exported video runtime is between **1:45 and 1:55** (strictly below 2:00:00).
+- [ ] **No Rule-Breaking Visuals:** Only presentation slides, diagrams, and Figma mobile mockups shown (no live code, no terminal, no `localhost` address bars).
+- [ ] **Progress Honesty Emphasized:** Person 4 explicitly stated what is completed conceptually vs. what remains for the Final Day build session.
