@@ -1,0 +1,61 @@
+/* Nikklas design tokens v1.1 for Tailwind CSS 4 (drop-in for src/app/globals.css).
+ *
+ * Same token names as v1.0, so existing classes keep working. Changes:
+ *  - text, muted: darker for contrast; primary: clay with a white label (was peach with dark text)
+ *  - tag-*: sand and ink-2 (was lavender)
+ *  - NEW edge: use for <input>, <select>, <textarea> borders (v1.0 border is 1.31:1, WCAG 1.4.11 needs 3:1)
+ *  - NEW peach / on-peach: own chat bubble and selected chips
+ *  - font-body: Figtree (load with next/font/google in the locale layout, variable --font-figtree)
+ */
+@import "tailwindcss";
+
+@theme {
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-body: var(--font-figtree), "Segoe UI", sans-serif;
+
+  --color-bg: #FFF8F2;          /* cream app ground */
+  --color-surface: #FFFFFF;     /* cards, inputs, chat */
+  --color-sand: #F7ECE3;        /* chips, notes */
+  --color-border: #E9DCD3;      /* decorative dividers and card edges only */
+  --color-edge: #9C8A84;        /* control borders, 3.29:1 on white */
+  --color-grid-line: #EFDFD2;
+  --color-text: #2B2220;        /* 14.8:1 on bg */
+  --color-text-2: #5A4A46;      /* 7.98:1 on bg */
+  --color-muted: #6E5D58;       /* 5.92:1 on bg */
+  --color-primary: #A8402A;     /* clay, the one accent */
+  --color-on-primary: #FFFFFF;  /* 6.12:1 on clay */
+  --color-primary-text: #A8402A;
+  --color-peach: #F4A58A;
+  --color-on-peach: #3B1F1A;    /* 7.59:1 on peach */
+  --color-tag-bg: #F7ECE3;
+  --color-tag-text: #5A4A46;    /* 7.22:1 on sand */
+  --color-success-text: #166534;
+  --color-success-bg: #DCFCE7;
+  --color-error-text: #991B1B;
+  --color-error-bg: #FEE2E2;
+
+  --radius-card: 24px;
+  --radius-control: 16px;
+  --shadow-card: 0 1px 0 rgba(43, 34, 32, 0.04);  /* no blurred shadow at rest */
+}
+
+body {
+  background-color: var(--color-bg);
+  background-image:
+    linear-gradient(var(--color-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid-line) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  margin: 0;
+  min-height: 100vh;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}

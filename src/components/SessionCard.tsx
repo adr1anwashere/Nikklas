@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 import React from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { SessionFeedItem } from '@/types/database';
@@ -51,32 +52,32 @@ export default function SessionCard({
   }[session.exam_period] || session.exam_period.toUpperCase();
 
   return (
-    <article className="bg-surface border border-border rounded-card p-5 shadow-card transition-all flex flex-col justify-between space-y-4">
+    <article className="bg-surface border border-border rounded-card p-5 shadow-card flex flex-col justify-between space-y-4">
       {/* 1. Header: Course Title & Section */}
       <div className="flex items-start justify-between gap-2">
         <div>
-          <h2 className="font-display font-bold text-[18px] text-text leading-snug">
+          <h2 className="font-display font-semibold text-[18px] text-text leading-snug">
             {session.course_code} {session.course_name}
           </h2>
           <p className="text-[14px] font-semibold text-primary-text">
-            Kelas {session.section}
+            {t('classSection', { section: session.section })}
           </p>
         </div>
 
         {/* Status / Host Badge */}
         <div className="flex flex-col items-end gap-1">
           {isHost && (
-            <span className="px-2.5 py-0.5 bg-primary/25 text-primary-text rounded-full text-[11px] font-bold">
+            <span className="px-2.5 py-0.5 bg-sand text-primary-text rounded-full text-[13px] font-semibold">
               {t('hostBadge')}
             </span>
           )}
           {!isHost && isMember && (
-            <span className="px-2.5 py-0.5 bg-success-bg text-success-text rounded-full text-[11px] font-bold">
+            <span className="px-2.5 py-0.5 bg-success-bg text-success-text rounded-full text-[13px] font-semibold">
               {t('alreadyMember')}
             </span>
           )}
           {isFull && (
-            <span className="px-2.5 py-0.5 bg-error-bg text-error-text rounded-full text-[11px] font-bold">
+            <span className="px-2.5 py-0.5 bg-error-bg text-error-text rounded-full text-[13px] font-semibold">
               {t('fullChip')}
             </span>
           )}
@@ -85,13 +86,13 @@ export default function SessionCard({
 
       {/* 2. Chips: Exam Period & Topic Tags */}
       <div className="flex flex-wrap gap-1.5">
-        <span className="px-3 py-1 bg-border text-text rounded-full text-[12px] font-semibold">
+        <span className="px-3 py-1 bg-sand text-text rounded-full text-[13px] font-semibold">
           {examPeriodLabel}
         </span>
         {session.topic_tags?.map((tag) => (
           <span
             key={tag}
-            className="px-3 py-1 bg-tag-bg text-tag-text rounded-full text-[12px] font-semibold"
+            className="px-3 py-1 bg-sand text-text-2 rounded-full text-[13px] font-semibold"
           >
             #{tag}
           </span>
@@ -101,7 +102,7 @@ export default function SessionCard({
       {/* 3. Time & Seats Left */}
       <div className="pt-1 border-t border-border/50 flex items-center justify-between text-[13px] text-muted">
         <span className="flex items-center gap-1 font-medium">
-          📅 {formattedDate}
+          <Icon name="calendar" /> {formattedDate}
         </span>
         <span className="font-semibold text-text">
           {t('seatsTaken', { current: session.current_size, max: session.max_size })}{' '}
@@ -119,24 +120,21 @@ export default function SessionCard({
           <button
             type="button"
             onClick={() => onOpenRoomClick && onOpenRoomClick(session.id)}
-            className="w-full h-11 bg-surface border-2 border-primary text-primary-text rounded-control font-semibold text-[14px] hover:bg-bg active:scale-[0.99] transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+            className="w-full h-12 bg-surface border border-primary text-primary-text rounded-control font-semibold text-[15px] hover:bg-sand flex items-center justify-center gap-2 cursor-pointer"
           >
-            💬 {t('openRoom')}
+            <Icon name="chat" /> {t('openRoom')}
           </button>
         ) : isFull ? (
-          <button
-            type="button"
-            disabled
-            className="w-full h-11 bg-bg text-muted/60 border border-border rounded-control font-semibold text-[14px] cursor-not-allowed flex items-center justify-center"
-          >
-            {t('fullChip')}
-          </button>
+          <p className="h-12 flex items-center justify-center rounded-control bg-sand text-text-2 text-[15px] font-medium">
+            {t('fullNote')}
+          </p>
         ) : (
           <button
             type="button"
             onClick={() => onJoinClick && onJoinClick(session.id)}
             disabled={isJoining}
-            className="w-full h-11 bg-primary text-on-primary rounded-control font-semibold text-[14px] hover:opacity-90 active:scale-[0.99] disabled:opacity-50 shadow-xs transition-all flex items-center justify-center cursor-pointer"
+            aria-label={`${t('joinButton')}: ${session.course_code} ${session.course_name}, ${t('classSection', { section: session.section })}`}
+            className="w-full h-12 bg-primary text-on-primary rounded-control font-semibold text-[15px] disabled:opacity-60 flex items-center justify-center cursor-pointer"
           >
             {isJoining ? t('joining') : t('joinButton')}
           </button>

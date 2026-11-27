@@ -1,0 +1,30 @@
+schema_version: 1
+slug: nikklas
+name: Nikklas
+one_liner: A mobile web app where Indonesian university students find or post a small study session for a shared course, section and exam, without sharing a phone number.
+tagline: "Temukan teman belajarmu. / Find your study people."
+archetype: Everyman (the classmate who saves you a seat)
+status: draft
+stage: pre-launch
+industry: education technology / campus study-group finder
+languages: [id, en]
+team: Satu Orang Satu Ubin
+links:
+  domain: ""
+  repo: https://github.com/adr1anwashere/Nikklas
+created: 2026-11-25
+updated: 2026-11-25
+version: 1.1
+artifacts:
+  context: true
+  naming: true
+  strategy: false
+  architecture: false
+  identity: true
+  voice: true
+  messaging: true
+  positioning: true
+  story: false
+  guidelines: true
+  audit: false
+  mod: false

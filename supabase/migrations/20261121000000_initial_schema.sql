@@ -1,4 +1,4 @@
--- Nikllas Initial Database Schema
+-- Nikklas Initial Database Schema
 -- Follows blueprint.md Section 5 & agent.md Section 5
 
 -- 1. Profiles Table

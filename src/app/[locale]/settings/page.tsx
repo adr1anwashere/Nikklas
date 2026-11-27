@@ -5,7 +5,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, usePathname, Link } from '@/i18n/navigation';
 import { getCurrentUser, getUserProfile, signOut } from '@/lib/auth';
 import { Profile } from '@/types/database';
-import LanguageSwitch from '@/components/LanguageSwitch';
+import AppHeader from '@/components/AppHeader';
 import BottomNav from '@/components/BottomNav';
 
 export default function SettingsPage() {
@@ -68,21 +68,14 @@ export default function SettingsPage() {
   return (
     <div className="flex flex-col min-h-screen pb-24">
       {/* Top Header */}
-      <header className="flex items-center justify-between pt-2 pb-4">
-        <div>
-          <h1 className="font-display font-bold text-[24px] text-primary-text leading-tight">
-            Nikllas
-          </h1>
-          <p className="text-[13px] text-muted">{t('subtitle')}</p>
-        </div>
-        <LanguageSwitch />
-      </header>
+      <AppHeader />
 
       {/* Main Content */}
-      <main className="space-y-5">
-        <h2 className="font-display font-bold text-[22px] text-text">
-          {t('title')}
-        </h2>
+      <div className="space-y-5">
+        <div className="space-y-0.5">
+          <h1 className="font-display font-normal text-[30px] leading-[1.15] text-text">{t('title')}</h1>
+          <p className="text-[15px] text-muted">{t('subtitle')}</p>
+        </div>
 
         {/* 1. Loading Skeleton */}
         {isLoading && (
@@ -106,17 +99,17 @@ export default function SettingsPage() {
             <section className="bg-surface border border-border rounded-card p-5 shadow-card space-y-4">
               <div className="flex items-start justify-between">
                 <div>
-                  <span className="text-[12px] font-semibold text-muted uppercase tracking-wider">
+                  <span className="text-[13px] font-semibold text-muted uppercase tracking-wider">
                     {t('profileSection')}
                   </span>
-                  <h3 className="font-display font-bold text-[20px] text-text mt-0.5">
+                  <h3 className="font-display font-semibold text-[20px] text-text mt-0.5">
                     {profile.nickname}
                   </h3>
                   <p className="text-[14px] text-muted mt-0.5">
-                    {profile.major} • {currentLocale === 'id' ? `Angkatan ${profile.year}` : `Class of ${profile.year}`}
+                    {profile.major} • {tProfile('yearOption', { year: profile.year })}
                   </p>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center text-primary-text font-display font-bold text-lg">
+                <div aria-hidden="true" className="w-12 h-12 rounded-full bg-peach flex items-center justify-center text-on-peach font-display font-semibold text-[20px]">
                   {profile.nickname.charAt(0).toUpperCase()}
                 </div>
               </div>
@@ -124,14 +117,14 @@ export default function SettingsPage() {
               {/* Topic chips */}
               {profile.topic_tags && profile.topic_tags.length > 0 && (
                 <div className="space-y-1.5 pt-1 border-t border-border/60">
-                  <span className="text-[12px] font-semibold text-muted">
+                  <span className="text-[13px] font-semibold text-muted">
                     {tProfile('tagsLabel')}
                   </span>
                   <div className="flex flex-wrap gap-1.5 pt-0.5">
                     {profile.topic_tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-2.5 py-1 rounded-control bg-tag-bg text-tag-text text-[13px] font-semibold"
+                        className="px-3 py-1 rounded-full bg-sand text-text-2 text-[13px] font-semibold"
                       >
                         #{tag}
                       </span>
@@ -144,7 +137,7 @@ export default function SettingsPage() {
               <div className="pt-2">
                 <Link
                   href="/setup"
-                  className="w-full flex items-center justify-center h-12 rounded-control bg-surface border border-border text-text font-semibold text-[15px] hover:border-primary-text hover:text-primary-text transition-colors"
+                  className="w-full flex items-center justify-center h-12 rounded-control bg-surface border border-edge text-text font-semibold text-[15px]"
                 >
                   {t('editProfile')}
                 </Link>
@@ -154,7 +147,7 @@ export default function SettingsPage() {
             {/* Language Selection Card */}
             <section className="bg-surface border border-border rounded-card p-5 shadow-card space-y-3">
               <div>
-                <h3 className="font-display font-bold text-[16px] text-text">
+                <h3 className="font-display font-semibold text-[16px] text-text">
                   {t('languageSection')}
                 </h3>
                 <p className="text-[13px] text-muted">
@@ -166,41 +159,43 @@ export default function SettingsPage() {
                 <button
                   type="button"
                   onClick={() => handleLanguageChange('id')}
-                  className={`h-12 rounded-control font-semibold text-[14px] border transition-colors flex items-center justify-center gap-2 ${
+                  aria-pressed={currentLocale === 'id'}
+                  lang="id"
+                  className={`h-12 rounded-control font-semibold text-[15px] border flex items-center justify-center ${
                     currentLocale === 'id'
-                      ? 'bg-primary text-on-primary border-primary shadow-sm'
-                      : 'bg-surface text-text border-border hover:border-muted'
+                      ? 'bg-peach text-on-peach border-peach'
+                      : 'bg-surface text-text border-edge'
                   }`}
                 >
-                  <span>🇮🇩</span>
                   <span>Bahasa Indonesia</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => handleLanguageChange('en')}
-                  className={`h-12 rounded-control font-semibold text-[14px] border transition-colors flex items-center justify-center gap-2 ${
+                  aria-pressed={currentLocale === 'en'}
+                  lang="en"
+                  className={`h-12 rounded-control font-semibold text-[15px] border flex items-center justify-center ${
                     currentLocale === 'en'
-                      ? 'bg-primary text-on-primary border-primary shadow-sm'
-                      : 'bg-surface text-text border-border hover:border-muted'
+                      ? 'bg-peach text-on-peach border-peach'
+                      : 'bg-surface text-text border-edge'
                   }`}
                 >
-                  <span>🇬🇧</span>
                   <span>English</span>
                 </button>
               </div>
             </section>
 
             {/* Prototype Guest Account Notice */}
-            <section className="bg-surface/80 border border-border rounded-card p-5 shadow-card space-y-2">
+            <section className="bg-sand rounded-card p-5 space-y-2">
               <div className="flex items-center gap-2 text-primary-text">
                 <svg className="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
-                <h3 className="font-display font-bold text-[16px]">
+                <h3 className="font-display font-semibold text-[16px]">
                   {t('guestNoticeTitle')}
                 </h3>
               </div>
-              <p className="text-[13px] text-muted leading-relaxed">
+              <p className="text-[15px] text-text-2 leading-relaxed">
                 {t('guestNoticeBody')}
               </p>
             </section>
@@ -211,14 +206,14 @@ export default function SettingsPage() {
                 type="button"
                 onClick={handleSignOut}
                 disabled={isSigningOut}
-                className="w-full h-12 rounded-control bg-error-bg/60 border border-error/20 text-error font-semibold text-[15px] hover:bg-error-bg hover:border-error transition-colors disabled:opacity-50 flex items-center justify-center"
+                className="w-full h-12 rounded-control bg-surface border border-error-text/40 text-error-text font-semibold text-[15px] hover:bg-error-bg disabled:opacity-50 flex items-center justify-center"
               >
                 {isSigningOut ? tCommon('loading') : t('signOut')}
               </button>
             </div>
           </div>
         )}
-      </main>
+      </div>
 
       {/* Pinned Bottom Navigation */}
       <BottomNav />

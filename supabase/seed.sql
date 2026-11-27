@@ -1,4 +1,4 @@
--- Seed data for Nikllas: Phase 6
+-- Seed data for Nikklas: Phase 6
 -- Follows blueprint.md Section 7 & Section 8
 
 -- =========================================================================

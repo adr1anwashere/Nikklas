@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 import React, { useState, useEffect, use } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
@@ -16,8 +17,9 @@ import {
   MeetingPlaceWithAuthor,
 } from '@/lib/meeting-place';
 import { joinSession } from '@/lib/sessions';
-import { SessionFeedItem, MeetingPlace } from '@/types/database';
-import LanguageSwitch from '@/components/LanguageSwitch';
+import { SessionFeedItem } from '@/types/database';
+import BackButton from '@/components/BackButton';
+import type { User } from '@supabase/supabase-js';
 import MemberList from '@/components/MemberList';
 import MeetingPlaceCard from '@/components/MeetingPlaceCard';
 import ChatPanel from '@/components/ChatPanel';
@@ -37,13 +39,14 @@ export default function SessionRoomPage({
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [session, setSession] = useState<SessionFeedItem | null>(null);
   const [members, setMembers] = useState<RoomMember[]>([]);
   const [meetingPlace, setMeetingPlace] = useState<MeetingPlaceWithAuthor | null>(null);
   const [isMember, setIsMember] = useState(false);
   const [isJoining, setIsJoining] = useState(false);
   const [isGuestSigningIn, setIsGuestSigningIn] = useState(false);
+  const [lockError, setLockError] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadRoom() {
@@ -141,6 +144,7 @@ export default function SessionRoomPage({
       }
     } catch (err) {
       console.error('Failed to sign in as guest:', err);
+      setLockError(tCommon('error'));
     } finally {
       setIsGuestSigningIn(false);
     }
@@ -161,11 +165,11 @@ export default function SessionRoomPage({
           setMeetingPlace(placeData);
         }
       } else {
-        alert(res.error === 'session_full' ? tSession('groupFull') : tCommon('error'));
-        router.replace('/feed');
+        setLockError(res.error === 'session_full' ? tSession('groupFull') : t('joinFailed'));
       }
     } catch (err) {
       console.error('Error joining directly from room:', err);
+      setLockError(t('joinFailed'));
     } finally {
       setIsJoining(false);
     }
@@ -208,25 +212,19 @@ export default function SessionRoomPage({
   if (!isMember) {
     return (
       <div className="flex flex-col justify-between min-h-[calc(100vh-2rem)]">
-        <header className="flex items-center justify-between pt-2 pb-4">
-          <button
-            type="button"
-            onClick={() => router.push('/feed')}
-            className="text-[14px] font-semibold text-primary-text hover:underline flex items-center gap-1 cursor-pointer"
-          >
-            &larr; {tCommon('back')}
-          </button>
-          <LanguageSwitch />
+        <header className="flex items-center pt-1 pb-1">
+          <BackButton label={tCommon('back')} onClick={() => router.push('/feed')} />
         </header>
 
         <div className="bg-surface border border-border rounded-card p-6 shadow-card text-center space-y-4 my-auto">
-          <div className="text-4xl">🔒</div>
-          <h2 className="font-display font-bold text-[20px] text-text">
+          <div className="text-[36px] text-primary-text flex justify-center"><Icon name="lock" /></div>
+          <h1 className="font-display font-normal text-[26px] text-text">
             {t('notMemberTitle')}
-          </h2>
-          <p className="text-[14px] text-muted leading-relaxed max-w-[320px] mx-auto">
+          </h1>
+          <p className="text-[15px] text-text-2 leading-relaxed max-w-[320px] mx-auto">
             {t('notMemberDesc')}
           </p>
+          {lockError && <p role="alert" className="px-4 py-3 rounded-control bg-error-bg text-error-text text-[14px]">{lockError}</p>}
 
           <div className="pt-2 flex flex-col gap-2">
             {!currentUser ? (
@@ -234,7 +232,7 @@ export default function SessionRoomPage({
                 type="button"
                 onClick={handleGuestEntryFromLock}
                 disabled={isGuestSigningIn}
-                className="w-full h-11 bg-primary text-on-primary font-semibold text-[14px] rounded-control hover:opacity-90 active:scale-95 transition-all shadow-xs cursor-pointer flex items-center justify-center"
+                className="w-full h-12 bg-primary text-on-primary font-semibold text-[15px] rounded-control cursor-pointer flex items-center justify-center"
               >
                 {isGuestSigningIn ? tCommon('enteringAsGuest') : tCommon('continueAsGuest')}
               </button>
@@ -243,7 +241,7 @@ export default function SessionRoomPage({
                 type="button"
                 onClick={handleJoinDirectly}
                 disabled={isJoining}
-                className="w-full h-11 bg-primary text-on-primary font-semibold text-[14px] rounded-control hover:opacity-90 active:scale-95 transition-all shadow-xs cursor-pointer flex items-center justify-center"
+                className="w-full h-12 bg-primary text-on-primary font-semibold text-[15px] rounded-control cursor-pointer flex items-center justify-center"
               >
                 {isJoining ? tSession('joining') : t('joinSessionFirst')}
               </button>
@@ -251,7 +249,7 @@ export default function SessionRoomPage({
             <button
               type="button"
               onClick={() => router.push('/feed')}
-              className="w-full h-11 bg-surface border border-border text-text font-semibold text-[14px] rounded-control hover:bg-bg active:scale-95 transition-all cursor-pointer"
+              className="w-full h-12 bg-surface border border-edge text-text font-semibold text-[15px] rounded-control cursor-pointer"
             >
               {t('backToFeed')}
             </button>
@@ -261,42 +259,35 @@ export default function SessionRoomPage({
     );
   }
 
-  if (!session) {
+  if (!session || !currentUser) {
     return null;
   }
 
   return (
     <div className="flex flex-col min-h-screen pb-6 space-y-4">
       {/* Top Header */}
-      <header className="flex items-center justify-between pt-2 pb-2 border-b border-border/60">
-        <button
-          type="button"
-          onClick={() => router.push('/feed')}
-          className="text-[14px] font-semibold text-primary-text hover:underline flex items-center gap-1 cursor-pointer"
-        >
-          &larr; {tCommon('back')}
-        </button>
-        <LanguageSwitch />
-      </header>
+      <header className="flex items-center pt-1 pb-1">
+          <BackButton label={tCommon('back')} onClick={() => router.push('/feed')} />
+        </header>
 
       {/* Session Information Header per ui.md */}
       <section className="bg-surface border border-border rounded-card p-4 shadow-card space-y-2">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="font-display font-bold text-[20px] text-text leading-tight">
+            <h1 className="font-display font-normal text-[26px] text-text leading-tight">
               {session.course_code} {session.course_name}
             </h1>
             <p className="text-[14px] font-semibold text-primary-text">
-              Kelas {session.section} &bull; {examLabel}
+              {tSession('classSection', { section: session.section })} &bull; {examLabel}
             </p>
           </div>
-          <span className="px-2.5 py-1 bg-tag-bg text-tag-text rounded-full text-[12px] font-semibold">
+          <span className="px-3 py-1 bg-sand text-text-2 rounded-full text-[13px] font-semibold" aria-label={`${members.length} / ${session.max_size}`}>
             {members.length}/{session.max_size}
           </span>
         </div>
 
-        <div className="pt-1 flex items-center gap-3 text-[13px] text-muted">
-          <span>📅 {formattedTime}</span>
+        <div className="pt-1 flex items-center gap-3 text-[14px] text-muted">
+          <span className="inline-flex items-center gap-1.5"><Icon name="calendar" /> {formattedTime}</span>
         </div>
 
         {/* Topic tags */}
@@ -305,7 +296,7 @@ export default function SessionRoomPage({
             {session.topic_tags.map((tag) => (
               <span
                 key={tag}
-                className="px-2.5 py-0.5 bg-bg border border-border text-muted rounded-full text-[11px] font-medium"
+                className="px-3 py-1 bg-sand text-text-2 rounded-full text-[13px] font-semibold"
               >
                 #{tag}
               </span>

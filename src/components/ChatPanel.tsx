@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { createClient as createBrowserClient } from '@/lib/supabase/client';
@@ -18,7 +19,6 @@ export default function ChatPanel({
   members,
 }: ChatPanelProps) {
   const t = useTranslations('room');
-  const tCommon = useTranslations('common');
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
@@ -107,9 +107,9 @@ export default function ChatPanel({
         if (prev.some((m) => m.id === createdMsg.id)) return prev;
         return [...prev, createdMsg];
       });
-    } catch (err: any) {
+    } catch (err) {
       console.error('Failed to send message:', err);
-      setErrorMsg(err.message || tCommon('error'));
+      setErrorMsg(t('sendFailed'));
     } finally {
       setIsSending(false);
     }
@@ -129,19 +129,19 @@ export default function ChatPanel({
     <div className="flex flex-col flex-1 min-h-[360px] bg-surface border border-border rounded-card shadow-card overflow-hidden">
       {/* Chat Header */}
       <div className="px-5 py-3 border-b border-border/70 flex items-center justify-between bg-bg/50">
-        <h3 className="font-display font-bold text-[16px] text-text">
-          💬 {t('chatTitle')}
-        </h3>
-        <span className="text-[12px] text-muted">Realtime</span>
+        <h2 className="font-display font-semibold text-[17px] text-text flex items-center gap-2">
+          <Icon name="chat" /> {t('chatTitle')}
+        </h2>
+        <span className="inline-flex items-center gap-1.5 text-[13px] text-success-text font-semibold"><span className="w-2 h-2 rounded-full bg-success-text" aria-hidden="true" />{t('live')}</span>
       </div>
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 p-4 overflow-y-auto space-y-3 min-h-[260px] max-h-[480px]">
+      <div className="flex-1 p-4 overflow-y-auto space-y-3 min-h-[260px] max-h-[60vh]" role="log" aria-live="polite" aria-label={t('chatTitle')}>
         {/* 1. Loading Skeleton: 3 skeleton bubbles per ui.md */}
         {isLoading && (
           <div className="space-y-3 animate-pulse" role="status">
             <div className="h-10 bg-border/40 rounded-card w-3/5 mr-auto"></div>
-            <div className="h-12 bg-primary/20 rounded-card w-2/5 ml-auto"></div>
+            <div className="h-12 bg-peach/40 rounded-card w-2/5 ml-auto"></div>
             <div className="h-10 bg-border/40 rounded-card w-1/2 mr-auto"></div>
           </div>
         )}
@@ -149,7 +149,7 @@ export default function ChatPanel({
         {/* 2. Empty Chat State per ui.md */}
         {!isLoading && messages.length === 0 && (
           <div className="h-full flex flex-col items-center justify-center text-center p-6 text-muted my-auto">
-            <span className="text-3xl mb-2">👋</span>
+            <span className="text-[32px] mb-2 text-primary-text"><Icon name="smile" /></span>
             <p className="text-[14px] font-medium">{t('emptyChat')}</p>
           </div>
         )}
@@ -158,7 +158,7 @@ export default function ChatPanel({
         {!isLoading &&
           messages.map((msg) => {
             const isOwn = msg.user_id === currentUserId;
-            const senderName = memberNicknameMap.get(msg.user_id) || 'Mahasiswa';
+            const senderName = memberNicknameMap.get(msg.user_id) || t('unknownMember');
 
             return (
               <div
@@ -167,16 +167,16 @@ export default function ChatPanel({
               >
                 {/* Sender Nickname (for other members) */}
                 {!isOwn && (
-                  <span className="text-[11px] font-semibold text-muted ml-2 mb-1">
+                  <span className="text-[13px] font-semibold text-muted ml-2 mb-1">
                     {senderName}
                   </span>
                 )}
 
                 {/* Message Bubble per ui.md */}
                 <div
-                  className={`px-4 py-2.5 rounded-card text-[14px] leading-relaxed break-words max-w-[75%] shadow-xs ${
+                  className={`px-4 py-2.5 rounded-card text-[15px] leading-relaxed break-words max-w-[78%] ${
                     isOwn
-                      ? 'bg-primary text-on-primary font-medium rounded-br-xs'
+                      ? 'bg-peach text-on-peach font-medium rounded-br-xs'
                       : 'bg-surface text-text border border-border rounded-bl-xs'
                   }`}
                 >
@@ -185,7 +185,7 @@ export default function ChatPanel({
                 </div>
 
                 {/* Timestamp */}
-                <span className="text-[10px] text-muted/70 px-1.5 mt-0.5">
+                <span className="text-[13px] text-muted px-1.5 mt-0.5">
                   {formatTime(msg.created_at)}
                 </span>
               </div>
@@ -197,7 +197,7 @@ export default function ChatPanel({
 
       {/* Error message alert */}
       {errorMsg && (
-        <div className="px-4 py-1.5 bg-error-bg text-error-text text-[12px] font-medium border-t border-error-text/10">
+        <div role="alert" className="px-4 py-2 bg-error-bg text-error-text text-[14px] font-medium border-t border-error-text/10">
           {errorMsg}
         </div>
       )}
@@ -215,16 +215,19 @@ export default function ChatPanel({
             if (errorMsg) setErrorMsg(null);
           }}
           placeholder={t('typeMessage')}
+          aria-label={t('typeMessage')}
+          enterKeyHint="send"
+          autoComplete="off"
           maxLength={1000}
           disabled={isSending}
-          className="flex-1 h-11 px-4 rounded-control border border-border bg-surface text-text text-[14px] placeholder:text-muted/60 focus:outline-none focus:ring-2 focus:ring-primary-text transition-all"
+          className="flex-1 min-w-0 h-12 px-4 rounded-control border border-edge bg-surface text-text text-[16px] placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary-text transition-all"
         />
         <button
           type="submit"
           disabled={isSending || !inputText.trim()}
-          className="h-11 px-5 bg-primary text-on-primary font-semibold text-[14px] rounded-control hover:opacity-90 active:scale-95 disabled:opacity-50 disabled:pointer-events-none transition-all shadow-xs cursor-pointer flex items-center justify-center shrink-0"
+          className="h-12 px-5 bg-primary text-on-primary font-semibold text-[15px] rounded-control disabled:opacity-50 cursor-pointer flex items-center justify-center shrink-0"
         >
-          {isSending ? '...' : t('send')}
+          {isSending ? t('sending') : t('send')}
         </button>
       </form>
     </div>

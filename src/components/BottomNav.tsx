@@ -2,15 +2,16 @@
 
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
+import Icon from '@/components/Icon';
 
 export default function BottomNav() {
   const t = useTranslations('nav');
   const pathname = usePathname();
 
   const navItems = [
-    { href: '/feed', label: t('explore'), active: pathname.startsWith('/feed') },
-    { href: '/my-sessions', label: t('mySessions'), active: pathname.startsWith('/my-sessions') },
-    { href: '/settings', label: t('settings'), active: pathname.startsWith('/settings') },
+    { href: '/feed', label: t('explore'), icon: 'compass' as const, active: pathname.startsWith('/feed') },
+    { href: '/my-sessions', label: t('mySessions'), icon: 'seats' as const, active: pathname.startsWith('/my-sessions') },
+    { href: '/settings', label: t('settings'), icon: 'user' as const, active: pathname.startsWith('/settings') },
   ];
 
   return (
@@ -20,12 +21,14 @@ export default function BottomNav() {
           <Link
             key={item.href}
             href={item.href}
-            className={`flex flex-col items-center justify-center py-1 text-[13px] font-semibold transition-colors ${
+            aria-current={item.active ? 'page' : undefined}
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-16 min-h-11 py-1 text-[13px] font-semibold transition-colors ${
               item.active
-                ? 'text-primary-text font-bold'
+                ? 'text-primary-text font-semibold'
                 : 'text-muted hover:text-text'
             }`}
           >
+            <Icon name={item.icon} className="text-[22px]" />
             <span>{item.label}</span>
           </Link>
         ))}

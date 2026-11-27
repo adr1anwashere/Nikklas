@@ -1,9 +1,11 @@
 'use client';
 
+import Icon from '@/components/Icon';
 import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { MeetingPlaceWithAuthor, upsertMeetingPlace } from '@/lib/meeting-place';
 import { meetingPlaceSchema } from '@/lib/validation/meeting-place';
+import { useSheet } from '@/components/useSheet';
 
 interface MeetingPlaceCardProps {
   sessionId: string;
@@ -25,6 +27,7 @@ export default function MeetingPlaceCard({
   const [mapUrl, setMapUrl] = useState(meetingPlace?.map_url || '');
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const sheetRef = useSheet(isModalOpen, () => setIsModalOpen(false));
 
   const handleOpenModal = () => {
     setDescription(meetingPlace?.description || '');
@@ -46,7 +49,7 @@ export default function MeetingPlaceCard({
       const fieldErrors: Record<string, string> = {};
       result.error.issues.forEach((issue) => {
         const field = issue.path[0] as string;
-        fieldErrors[field] = tValidation(issue.message as any);
+        fieldErrors[field] = tValidation(issue.message as Parameters<typeof tValidation>[0]);
       });
       setErrors(fieldErrors);
       return;
@@ -61,9 +64,9 @@ export default function MeetingPlaceCard({
       );
       onUpdated(updated);
       setIsModalOpen(false);
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error updating meeting place:', err);
-      setErrors({ form: err.message || tCommon('error') });
+      setErrors({ form: t('saveFailed') });
     } finally {
       setIsSaving(false);
     }
@@ -73,14 +76,14 @@ export default function MeetingPlaceCard({
     <div className="bg-surface border border-border rounded-card p-4 shadow-card space-y-3">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="font-display font-bold text-[16px] text-text flex items-center gap-1.5">
-          <span>📍</span>
+        <h2 className="font-display font-semibold text-[17px] text-text flex items-center gap-2">
+          <Icon name="pin" />
           <span>{t('title')}</span>
-        </h3>
+        </h2>
         <button
           type="button"
           onClick={handleOpenModal}
-          className="px-3 py-1 bg-bg border border-border text-[12px] font-semibold text-text rounded-control hover:bg-surface active:scale-95 transition-all cursor-pointer"
+          className="h-11 px-4 bg-surface border border-edge text-[14px] font-semibold text-text rounded-control cursor-pointer"
         >
           {meetingPlace ? t('editPlace') : t('suggestPlace')}
         </button>
@@ -93,24 +96,24 @@ export default function MeetingPlaceCard({
             {meetingPlace.description}
           </p>
 
-          <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-border/50 text-[12px] text-muted">
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-border/50 text-[13px] text-muted">
             {/* Map Link Chip */}
             {meetingPlace.map_url && (
               <a
                 href={meetingPlace.map_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 px-3 py-1 bg-primary/20 text-primary-text font-semibold rounded-full hover:bg-primary/30 transition-colors shadow-2xs"
+                className="inline-flex items-center gap-1.5 h-11 px-4 bg-sand text-primary-text font-semibold text-[14px] rounded-full hover:bg-border"
               >
-                <span>🗺️</span>
+                <Icon name="map" />
                 <span>{t('openMap')}</span>
-                <span className="text-[10px]">&nearr;</span>
+                <Icon name="external" className="text-[14px]" />
               </a>
             )}
 
             {/* Author info */}
             {meetingPlace.author_nickname && (
-              <span className="text-muted/80">
+              <span className="text-muted">
                 {t('updatedBy', { name: meetingPlace.author_nickname })}
               </span>
             )}
@@ -125,37 +128,40 @@ export default function MeetingPlaceCard({
           <button
             type="button"
             onClick={handleOpenModal}
-            className="text-[12px] font-semibold text-primary-text hover:underline cursor-pointer"
+            className="h-11 px-3 -mr-2 inline-flex items-center gap-1.5 rounded-control text-[14px] font-semibold text-primary-text hover:bg-sand cursor-pointer"
           >
-            + {t('suggestPlace')}
+            <Icon name="plus" /> {t('suggestPlace')}
           </button>
         </div>
       )}
 
       {/* Modal / Bottom Sheet Form */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-xs transition-opacity animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setIsModalOpen(false); }}>
           <div
-            className="w-full max-w-[480px] bg-surface rounded-t-[28px] border-t border-border p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto"
+            ref={sheetRef}
+            className="w-full max-w-[480px] bg-surface rounded-t-[28px] border-t border-border p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] space-y-4 max-h-[85vh] overflow-y-auto"
             role="dialog"
             aria-modal="true"
+            aria-labelledby="mp-title"
           >
             {/* Modal Header */}
             <div className="flex items-center justify-between pb-3 border-b border-border/60">
-              <h4 className="font-display font-bold text-[18px] text-text">
-                📍 {t('title')}
-              </h4>
+              <h2 id="mp-title" className="font-display font-semibold text-[20px] text-text flex items-center gap-2">
+                <Icon name="pin" /> {t('title')}
+              </h2>
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-bg border border-border flex items-center justify-center text-text hover:bg-border transition-colors cursor-pointer"
+                aria-label={tCommon('close')}
+                className="w-11 h-11 rounded-full bg-sand flex items-center justify-center text-text hover:bg-border cursor-pointer"
               >
-                &times;
+                <Icon name="x" className="text-[18px]" />
               </button>
             </div>
 
             {errors.form && (
-              <p className="p-2.5 bg-error-bg text-error-text text-[12px] rounded-control">
+              <p role="alert" className="p-3 bg-error-bg text-error-text text-[14px] rounded-control">
                 {errors.form}
               </p>
             )}
@@ -163,7 +169,7 @@ export default function MeetingPlaceCard({
             <form onSubmit={handleSave} className="space-y-4">
               {/* Description */}
               <div className="space-y-1.5">
-                <label htmlFor="mp-desc" className="block text-[13px] font-semibold text-text">
+                <label htmlFor="mp-desc" className="block text-[14px] font-semibold text-text">
                   {t('descLabel')}
                 </label>
                 <textarea
@@ -175,18 +181,20 @@ export default function MeetingPlaceCard({
                     if (errors.description) setErrors((prev) => ({ ...prev, description: '' }));
                   }}
                   placeholder={t('descPlaceholder')}
-                  className={`w-full p-3 rounded-control border bg-surface text-text text-[14px] placeholder:text-muted/60 focus:outline-none focus:ring-2 focus:ring-primary-text transition-all ${
-                    errors.description ? 'border-error-text ring-1 ring-error-text' : 'border-border'
+                  aria-invalid={errors.description ? true : undefined}
+                  aria-describedby={errors.description ? 'mp-desc-error' : undefined}
+                  className={`w-full p-3 rounded-control border bg-surface text-text text-[16px] placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary-text transition-all ${
+                    errors.description ? 'border-error-text ring-1 ring-error-text' : 'border-edge'
                   }`}
                 />
                 {errors.description && (
-                  <p className="text-[12px] text-error-text font-medium">{errors.description}</p>
+                  <p id="mp-desc-error" className="text-[14px] text-error-text font-medium">{errors.description}</p>
                 )}
               </div>
 
               {/* Map Link */}
               <div className="space-y-1.5">
-                <label htmlFor="mp-map" className="block text-[13px] font-semibold text-text">
+                <label htmlFor="mp-map" className="block text-[14px] font-semibold text-text">
                   {t('mapLabel')}
                 </label>
                 <input
@@ -198,13 +206,16 @@ export default function MeetingPlaceCard({
                     if (errors.map_url) setErrors((prev) => ({ ...prev, map_url: '' }));
                   }}
                   placeholder={t('mapPlaceholder')}
-                  className={`w-full h-11 px-4 rounded-control border bg-surface text-text text-[14px] placeholder:text-muted/60 focus:outline-none focus:ring-2 focus:ring-primary-text transition-all ${
-                    errors.map_url ? 'border-error-text ring-1 ring-error-text' : 'border-border'
+                  inputMode="url"
+                  aria-invalid={errors.map_url ? true : undefined}
+                  aria-describedby={errors.map_url ? 'mp-map-hint mp-map-error' : 'mp-map-hint'}
+                  className={`w-full h-12 px-4 rounded-control border bg-surface text-text text-[16px] placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary-text transition-all ${
+                    errors.map_url ? 'border-error-text ring-1 ring-error-text' : 'border-edge'
                   }`}
                 />
-                <p className="text-[11px] text-muted">{t('mapHint')}</p>
+                <p id="mp-map-hint" className="text-[14px] text-muted">{t('mapHint')}</p>
                 {errors.map_url && (
-                  <p className="text-[12px] text-error-text font-medium">{errors.map_url}</p>
+                  <p id="mp-map-error" className="text-[14px] text-error-text font-medium">{errors.map_url}</p>
                 )}
               </div>
 
@@ -213,14 +224,14 @@ export default function MeetingPlaceCard({
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 h-11 rounded-control border border-border bg-surface text-text font-semibold text-[14px] hover:bg-bg active:scale-95 transition-all cursor-pointer"
+                  className="flex-1 h-12 rounded-control border border-edge bg-surface text-text font-semibold text-[15px] cursor-pointer"
                 >
                   {t('cancel')}
                 </button>
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="flex-1 h-11 rounded-control bg-primary text-on-primary font-semibold text-[14px] shadow-sm hover:opacity-90 active:scale-95 disabled:opacity-50 transition-all cursor-pointer flex items-center justify-center"
+                  className="flex-1 h-12 rounded-control bg-primary text-on-primary font-semibold text-[15px] disabled:opacity-60 cursor-pointer flex items-center justify-center"
                 >
                   {isSaving ? t('saving') : t('save')}
                 </button>

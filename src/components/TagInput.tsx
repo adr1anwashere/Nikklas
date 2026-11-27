@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
@@ -52,11 +53,11 @@ export default function TagInput({ tags, onChange, maxTags = 5 }: TagInputProps)
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <label htmlFor="tag-input" className="text-[13px] font-semibold text-text">
+        <label htmlFor="tag-input" className="text-[14px] font-semibold text-text">
           {t('tagsLabel')}
         </label>
         <span
-          className={`text-[12px] font-semibold ${
+          className={`text-[13px] font-semibold ${
             tags.length >= maxTags ? 'text-primary-text' : 'text-muted'
           }`}
         >
@@ -75,15 +76,18 @@ export default function TagInput({ tags, onChange, maxTags = 5 }: TagInputProps)
             if (errorMessage) setErrorMessage(null);
           }}
           onKeyDown={handleKeyDown}
+          aria-invalid={errorMessage ? true : undefined}
+          aria-describedby={errorMessage ? 'tag-error' : undefined}
+          enterKeyHint="done"
           placeholder={t('tagsPlaceholder')}
           disabled={tags.length >= maxTags}
-          className="flex-1 h-12 px-4 rounded-control border border-border bg-surface text-text text-[15px] placeholder:text-muted/60 focus:outline-none focus:ring-2 focus:ring-primary-text disabled:opacity-50 transition-all"
+          className="flex-1 h-12 px-4 rounded-control border border-edge bg-surface text-text text-[16px] placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary-text disabled:opacity-50 transition-all"
         />
         <button
           type="button"
           onClick={handleAddTag}
           disabled={tags.length >= maxTags || !inputValue.trim()}
-          className="h-12 px-5 bg-surface border border-border text-text font-semibold text-[14px] rounded-control hover:bg-bg active:scale-95 disabled:opacity-50 disabled:pointer-events-none transition-all cursor-pointer"
+          className="h-12 px-5 bg-surface border border-edge text-text font-semibold text-[15px] rounded-control disabled:opacity-50 cursor-pointer"
         >
           {t('addTag')}
         </button>
@@ -91,7 +95,7 @@ export default function TagInput({ tags, onChange, maxTags = 5 }: TagInputProps)
 
       {/* Warning / Error Message for 6th Tag */}
       {errorMessage && (
-        <p className="text-[13px] text-error-text bg-error-bg px-3 py-1.5 rounded-control" role="alert">
+        <p id="tag-error" className="text-[14px] text-error-text bg-error-bg px-3 py-2 rounded-control" role="alert">
           {errorMessage}
         </p>
       )}
@@ -102,16 +106,16 @@ export default function TagInput({ tags, onChange, maxTags = 5 }: TagInputProps)
           {tags.map((tag) => (
             <span
               key={tag}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-tag-bg text-tag-text rounded-full text-[13px] font-semibold shadow-xs"
+              className="inline-flex items-center gap-1 h-9 pl-3.5 pr-2 bg-sand text-text-2 rounded-full text-[14px] font-semibold"
             >
               #{tag}
               <button
                 type="button"
                 onClick={() => handleRemoveTag(tag)}
-                className="w-4 h-4 rounded-full flex items-center justify-center hover:bg-tag-text/10 text-tag-text/70 hover:text-tag-text transition-colors cursor-pointer"
-                aria-label={`Hapus topik ${tag}`}
+                className="w-7 h-7 -mr-1.5 rounded-full flex items-center justify-center hover:bg-border text-text-2 cursor-pointer"
+                aria-label={t('removeTag', { tag })}
               >
-                &times;
+                <Icon name="x" />
               </button>
             </span>
           ))}

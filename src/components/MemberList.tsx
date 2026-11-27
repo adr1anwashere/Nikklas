@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { RoomMember } from '@/lib/chat';
@@ -17,10 +18,10 @@ export default function MemberList({ members, maxSize }: MemberListProps) {
   return (
     <div className="bg-surface border border-border rounded-card p-4 shadow-card space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="font-display font-bold text-[16px] text-text">
-          👥 {t('membersTitle')} ({members.length}/{maxSize})
-        </h3>
-        <span className="text-[12px] text-muted">
+        <h2 className="font-display font-semibold text-[17px] text-text flex items-center gap-2">
+          <Icon name="users" /> {t('membersTitle')} ({members.length}/{maxSize})
+        </h2>
+        <span className="text-[13px] text-muted">
           {maxSize - members.length > 0
             ? tSession('seatsLeft', { seats: maxSize - members.length })
             : tSession('fullChip')}
@@ -28,26 +29,26 @@ export default function MemberList({ members, maxSize }: MemberListProps) {
       </div>
 
       {/* Member Cards / Chips */}
-      <div className="flex flex-wrap gap-2">
+      <ul className="flex flex-wrap gap-2">
         {members.map((member) => (
-          <div
+          <li
             key={member.user_id}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-bg border border-border rounded-full text-[13px]"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-bg border border-border rounded-full text-[14px]"
           >
             <span className="font-semibold text-text">
               {member.nickname}
             </span>
-            <span className="text-[11px] text-muted">
+            <span className="text-[13px] text-muted">
               ({member.major} &bull; {tProfile('yearOption', { year: member.year })})
             </span>
             {member.is_host && (
-              <span className="px-1.5 py-0.2 bg-primary/25 text-primary-text rounded-full text-[10px] font-bold">
-                Host
+              <span className="px-1.5 py-0.2 bg-sand text-primary-text rounded-full text-[13px] font-semibold">
+                {tSession('hostBadge')}
               </span>
             )}
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }

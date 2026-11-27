@@ -15,13 +15,14 @@ export default function LanguageSwitch() {
   }
 
   return (
-    <div className="flex items-center gap-1.5 p-1 bg-surface border border-border rounded-control shadow-sm">
+    <div role="group" aria-label="Bahasa / Language" className="flex items-center gap-1 p-1 bg-surface border border-edge rounded-control">
       <button
         type="button"
         onClick={() => switchLocale('id')}
-        className={`px-3 py-1 text-xs font-semibold rounded-control transition-colors ${
+        aria-pressed={currentLocale === 'id'}
+        className={`min-w-11 h-9 px-3 text-[14px] font-semibold rounded-[12px] ${
           currentLocale === 'id'
-            ? 'bg-primary text-on-primary'
+            ? 'bg-peach text-on-peach'
             : 'text-muted hover:text-text'
         }`}
         aria-label="Ganti ke Bahasa Indonesia"
@@ -31,9 +32,10 @@ export default function LanguageSwitch() {
       <button
         type="button"
         onClick={() => switchLocale('en')}
-        className={`px-3 py-1 text-xs font-semibold rounded-control transition-colors ${
+        aria-pressed={currentLocale === 'en'}
+        className={`min-w-11 h-9 px-3 text-[14px] font-semibold rounded-[12px] ${
           currentLocale === 'en'
-            ? 'bg-primary text-on-primary'
+            ? 'bg-peach text-on-peach'
             : 'text-muted hover:text-text'
         }`}
         aria-label="Switch to English"

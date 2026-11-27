@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from '@/components/Icon';
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
@@ -12,7 +13,8 @@ import {
   SessionFilters,
 } from '@/lib/sessions';
 import { Profile, SessionFeedItem, Course } from '@/types/database';
-import LanguageSwitch from '@/components/LanguageSwitch';
+import AppHeader from '@/components/AppHeader';
+import type { User } from '@supabase/supabase-js';
 import SessionCard from '@/components/SessionCard';
 import FilterBar from '@/components/FilterBar';
 import BottomNav from '@/components/BottomNav';
@@ -25,7 +27,7 @@ export default function FeedPage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
   const [sessions, setSessions] = useState<SessionFeedItem[]>([]);
   const [joinedSessionIds, setJoinedSessionIds] = useState<string[]>([]);
@@ -129,23 +131,14 @@ export default function FeedPage() {
   );
 
   return (
-    <div className="flex flex-col min-h-screen pb-24">
+    <div className="flex flex-col min-h-screen pb-40">
       {/* Top Header */}
-      <header className="flex items-center justify-between pt-2 pb-3">
-        <div>
-          <h1 className="font-display font-bold text-[26px] text-primary-text leading-tight">
-            Nikllas
-          </h1>
-          <p className="text-[13px] text-muted">
-            {profile ? t('welcome', { name: profile.nickname }) : ''}
-          </p>
-        </div>
-        <LanguageSwitch />
-      </header>
+      <AppHeader right={profile ? <p className="text-[14px] text-muted">{t('welcome', { name: profile.nickname })}</p> : null} />
 
       {/* Toast Feedback Notification */}
       {toastMessage && (
         <div
+          aria-live="polite"
           className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-control text-[13px] font-semibold shadow-lg transition-all animate-in fade-in slide-in-from-top duration-200 ${
             toastMessage.type === 'success'
               ? 'bg-success-bg text-success-text border border-success-text/20'
@@ -158,13 +151,13 @@ export default function FeedPage() {
       )}
 
       {/* Main Content */}
-      <main className="space-y-4">
+      <div className="space-y-4">
         {/* Page Title & Subtitle */}
         <div className="space-y-0.5">
-          <h2 className="font-display font-bold text-[24px] text-text">
+          <h1 className="font-display font-normal text-[30px] leading-[1.15] text-text">
             {t('title')}
-          </h2>
-          <p className="text-[13px] text-muted">
+          </h1>
+          <p className="text-[15px] text-muted">
             {t('subtitle')}
           </p>
         </div>
@@ -199,8 +192,8 @@ export default function FeedPage() {
         {/* 2. Empty Feed (No sessions exist at all) */}
         {!isLoading && sessions.length === 0 && !hasFiltersApplied && (
           <div className="flex flex-col items-center justify-center text-center p-8 bg-surface border border-border rounded-card shadow-card space-y-3 my-4">
-            <div className="text-3xl">📚</div>
-            <h3 className="font-display font-bold text-[18px] text-text">
+            <div className="text-[32px] text-primary-text"><Icon name="book" /></div>
+            <h3 className="font-display font-semibold text-[18px] text-text">
               {t('empty')}
             </h3>
             <p className="text-[14px] text-muted max-w-[280px]">
@@ -209,9 +202,9 @@ export default function FeedPage() {
             <button
               type="button"
               onClick={() => router.push('/sessions/new')}
-              className="mt-2 h-11 px-6 bg-primary text-on-primary font-semibold text-[14px] rounded-control shadow-sm hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+              className="mt-2 h-12 px-6 inline-flex items-center gap-2 bg-primary text-on-primary font-semibold text-[15px] rounded-control cursor-pointer"
             >
-              + {t('createSession')}
+              <Icon name="plus" /> {t('createSession')}
             </button>
           </div>
         )}
@@ -219,17 +212,17 @@ export default function FeedPage() {
         {/* 3. No Results for Active Filter (per ui.md spec) */}
         {!isLoading && sessions.length === 0 && hasFiltersApplied && (
           <div className="flex flex-col items-center justify-center text-center p-8 bg-surface border border-border rounded-card shadow-card space-y-3 my-4">
-            <div className="text-3xl">🔍</div>
-            <h3 className="font-display font-bold text-[18px] text-text">
+            <div className="text-[32px] text-primary-text"><Icon name="search" /></div>
+            <h3 className="font-display font-semibold text-[18px] text-text">
               {t('noResults')}
             </h3>
             <p className="text-[13px] text-muted max-w-[280px]">
-              Coba kurangi atau reset filter yang dipilih untuk melihat sesi lainnya.
+              {t('noResultsHint')}
             </p>
             <button
               type="button"
               onClick={handleClearFilters}
-              className="mt-2 h-11 px-5 bg-surface border border-border text-text font-semibold text-[13px] rounded-control hover:bg-bg active:scale-95 transition-all cursor-pointer"
+              className="mt-2 h-11 px-5 bg-surface border border-border text-text font-semibold text-[13px] rounded-control hover:bg-bg transition-all cursor-pointer"
             >
               {t('clearFilters')}
             </button>
@@ -255,17 +248,17 @@ export default function FeedPage() {
             ))}
           </div>
         )}
-      </main>
+      </div>
 
       {/* Floating Action Button: "Buat sesi" pinned above bottom nav */}
       {!isLoading && (
-        <div className="fixed bottom-20 left-0 right-0 z-20 flex justify-center pointer-events-none px-4">
+        <div className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] left-0 right-0 z-20 flex justify-center pointer-events-none px-4">
           <button
             type="button"
             onClick={() => router.push('/sessions/new')}
-            className="pointer-events-auto h-12 px-6 bg-primary text-on-primary font-semibold text-[14px] rounded-full shadow-lg hover:opacity-90 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+            className="pointer-events-auto h-12 px-6 bg-primary text-on-primary font-semibold text-[14px] rounded-full shadow-lg transition-all flex items-center gap-2 cursor-pointer"
           >
-            <span className="text-lg leading-none">+</span>
+            <Icon name="plus" className="text-[18px]" />
             <span>{t('createSession')}</span>
           </button>
         </div>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128.00 128.00" width="128" height="128" role="img" aria-label="Nikklas">
+  <title>Nikklas</title>
+  <rect width="128.00" height="128.00" fill="#A8402A"/>
+  <rect x="16.00" y="16.00" width="42.00" height="42.00" rx="10.92" fill="#FFFFFF"/>
+  <rect x="70.00" y="16.00" width="42.00" height="42.00" rx="10.92" fill="#FFFFFF"/>
+  <rect x="16.00" y="70.00" width="42.00" height="42.00" rx="10.92" fill="#FFFFFF"/>
+  <rect x="72.88" y="72.88" width="36.24" height="36.24" rx="8.04" fill="none" stroke="#FFFFFF" stroke-width="5.76"/>
+</svg>
