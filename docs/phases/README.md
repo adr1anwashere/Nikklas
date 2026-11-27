@@ -2,12 +2,7 @@
 
 Adhi built the MVP in seven phases on 21 November 2026, one commit and one log per phase.
 
-```mermaid
-flowchart LR
-  P0[0 Setup] --> P1[1 Guest access] --> P2[2 Sessions] --> P3[3 Filters and join] --> P4[4 Room and chat] --> P5[5 Meeting place] --> P6[6 Polish and demo] --> V11[v1.1 Brand, UX, security]
-  classDef done fill:#FFF8F2,stroke:#A8402A,color:#2B2220
-  class P0,P1,P2,P3,P4,P5,P6,V11 done
-```
+<p align="center"><img src="../../docs/assets/diagrams/phases-flow.png" alt="Build order: phases 0 to 6, then the v1.1 and v1.2 brand, UX, dark mode and security pass" width="100%"></p>
 
 | Phase | Goal | Status |
 | --- | --- | --- |

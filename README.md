@@ -28,36 +28,11 @@ Built by team **Satu Orang Satu Ubin** for STACK 2026 by GDGoC ITB, Case 1: Smar
 
 ## How it works
 
-```mermaid
-flowchart LR
-  A[Continue as guest] --> B[Profile: nickname, major, year, topics]
-  B --> C[Feed: filter by course, section, exam, topic]
-  C -->|Join, one tap| D[Private session room]
-  C -->|Create session| E[Course, section, exam, time, 2 to 8 seats] --> D
-  D --> F[Live chat]
-  D --> G[Meeting place + map link]
-```
+<p align="center"><img src="docs/assets/diagrams/howitworks.png" alt="How it works: guest to profile to feed, join in one tap into a private room, with live chat and a meeting place" width="100%"></p>
 
 ## Architecture
 
-```mermaid
-flowchart TB
-  subgraph Client["Mobile web · Next.js 16 · React 19 · Tailwind 4"]
-    UI[Screens and components] --> I18N[next-intl · id / en]
-    UI --> ZOD[Zod validation]
-    UI --> AUTH["src/lib/auth (one module)"]
-  end
-  subgraph Supabase
-    PG[(Postgres · RLS on all 6 tables)]
-    JOIN["join_session() · FOR UPDATE row lock"]
-    RT[Realtime · Postgres Changes]
-    GA[Auth · anonymous guests]
-  end
-  AUTH --> GA
-  UI -->|HTTPS REST| PG
-  UI -->|rpc| JOIN --> PG
-  PG --> RT -->|WebSocket| UI
-```
+<p align="center"><img src="docs/assets/diagrams/architecture.png" alt="Architecture: a Next.js client talking to Supabase Postgres with RLS, the join_session function, Realtime and anonymous auth" width="100%"></p>
 
 Details: [security and data model](docs/security.md) · [blueprint](docs/blueprint.md) · [UI spec](docs/ui.md).
 

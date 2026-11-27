@@ -2,29 +2,7 @@
 
 Privacy is enforced in the database, not only in the UI. Row Level Security (RLS) is on for all six tables.
 
-```mermaid
-erDiagram
-  profiles ||--o{ sessions : hosts
-  profiles ||--o{ session_members : joins
-  sessions ||--o{ session_members : "has 2 to 8"
-  sessions ||--o{ messages : contains
-  sessions ||--o| meeting_places : "agrees on"
-  courses ||--o{ sessions : "is for"
-  profiles { uuid id PK
-    text nickname
-    text major
-    int year "1 to 6"
-    text_array topic_tags "max 5" }
-  sessions { uuid id PK
-    text section
-    text exam_period "quiz, uts, uas"
-    int max_size "2 to 8"
-    text status "open, full, closed" }
-  messages { uuid id PK
-    text body "1 to 1000 chars" }
-  meeting_places { uuid session_id PK
-    text map_url "https only" }
-```
+<p align="center"><img src="../docs/assets/diagrams/erd.png" alt="Data model: profiles, courses, sessions, session_members, messages and meeting_places, with RLS on all six tables" width="100%"></p>
 
 ## Who can read what
 
@@ -39,17 +17,7 @@ erDiagram
 
 ## Joining a session
 
-```mermaid
-sequenceDiagram
-  participant A as Student A
-  participant B as Student B
-  participant DB as join_session()
-  A->>DB: join (last seat)
-  B->>DB: join (last seat)
-  DB->>DB: lock the session row (FOR UPDATE)
-  DB-->>A: success, status becomes full
-  DB-->>B: session_full
-```
+<p align="center"><img src="../docs/assets/diagrams/join-sequence.png" alt="Two students tapping the last seat: the database locks the session row, one gets success and the session turns full, the other gets session_full" width="100%"></p>
 
 ## November 2026 hardening
 

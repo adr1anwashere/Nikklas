@@ -2,23 +2,7 @@
 
 <p align="center"><img src="docs/assets/progress.png" alt="8 of 10 milestones done: phases 0 to 6 and v1.1 are done, pilot prep is next, Final Day later" width="100%"></p>
 
-```mermaid
-gantt
-  title Nikklas timeline (STACK 2026)
-  dateFormat YYYY-MM-DD
-  axisFormat %d %b
-  section Built
-  MVP phases 0 to 6          :done, 2026-11-21, 1d
-  v1.1 brand, UX, security   :done, 2026-11-25, 1d
-  section Semifinal
-  Record video clips         :active, 2026-11-26, 3d
-  Edit video                 :2026-11-29, 1d
-  Submit proposal and Reel   :milestone, 2026-11-30, 0d
-  section After
-  Pilot prep (Milestone 2)   :2026-12-01, 15d
-  Top 10 announcement        :milestone, 2026-12-07, 0d
-  Final Day build, Bandung   :crit, 2026-12-16, 1d
-```
+<p align="center"><img src="docs/assets/diagrams/progress-timeline.png" alt="Timeline: MVP and v1.1/v1.2 built, record and edit the video, submit 30 November, then pilot prep and Final Day on 16 December" width="100%"></p>
 
 ## Works today
 

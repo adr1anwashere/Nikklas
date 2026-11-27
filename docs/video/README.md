@@ -2,25 +2,7 @@
 
 Vertical 9:16 Reel, under 2 minutes, English, posted on Rofi's Instagram and submitted as a link. Rofi, Haidar and Fathir each record alone; the app screens and graphics are added in the edit and labelled "Simulated UI".
 
-```mermaid
-gantt
-  dateFormat X
-  axisFormat %S s
-  section Rofi
-  Hook :0, 7
-  Team :7, 20
-  Problem :20, 36
-  section Haidar
-  Solution :36, 44
-  Profile :44, 51
-  Find and join :51, 65
-  Room :65, 75
-  section Fathir
-  Progress :75, 92
-  Pilot :92, 101
-  section All
-  Close :101, 110
-```
+<p align="center"><img src="../../docs/assets/diagrams/video-timeline.png" alt="Who speaks when across the 1 minute 50 second video: Rofi opens, Haidar demos, Fathir covers progress and pilot, all three close" width="100%"></p>
 
 | Who | Script | Teleprompter (open on a phone) |
 | --- | --- | --- |
