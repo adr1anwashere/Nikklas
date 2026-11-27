@@ -185,6 +185,11 @@
     "guestNoticeBody": "Your guest account is stored in this browser. Real phone numbers and email addresses are never stored or shared. Verified campus email (.ac.id) sign-in is our next development phase.",
     "signOut": "Sign out of guest account",
     "signOutConfirm": "Sign out of the guest account? Your sessions in this browser will be lost.",
-    "editProfile": "Edit profile"
+    "editProfile": "Edit profile",
+    "themeSection": "Appearance",
+    "themeDesc": "Choose light, dark, or follow your device",
+    "themeSystem": "System",
+    "themeLight": "Light",
+    "themeDark": "Dark"
   }
 }

@@ -84,7 +84,7 @@ export default function FilterBar({
           <Icon name="sliders" className="text-[16px]" />
           <span>{t('title')}</span>
           {activeCount > 0 && (
-            <span className="min-w-5 h-5 px-1 rounded-full bg-surface text-on-peach text-[13px] flex items-center justify-center font-semibold" aria-label={t('activeCount', { count: activeCount })}>
+            <span className="min-w-5 h-5 px-1 rounded-full bg-on-peach text-peach text-[13px] flex items-center justify-center font-semibold" aria-label={t('activeCount', { count: activeCount })}>
               {activeCount}
             </span>
           )}

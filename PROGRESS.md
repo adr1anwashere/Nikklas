@@ -32,6 +32,13 @@ gantt
 | Languages | Every screen in Bahasa Indonesia and English | 0 to 6 |
 | v1.1 | Brand, UX and security pass (below) | v1.1 |
 
+## v1.2 (25 Nov 2026, evening)
+
+<p align="center"><img src="docs/assets/screens-dark.png" alt="The same four screens in dark mode: warm dark ground with clay and peach accents" width="100%"></p>
+
+- **Dark mode** in the Nikklas style: warm ink ground `#1C1615`, lifted clay `#E57A5E` with dark labels, peach for selection. Every text pair passes WCAG AA (body 15.6:1, muted 7.4:1, buttons 6.2:1). It follows the device by default; Settings has **System / Light / Dark**, saved in this browser and applied before the first paint, so there is no flash.
+- **Landing version 3**, chosen by Adhi from three options: left-aligned, a small logo, the slogan large near the button where the thumb is.
+
 ## v1.1 changelog (25 Nov 2026)
 
 <p align="center"><img src="docs/assets/screens.png" alt="Four screens after v1.1: entry, study sessions, session room, create session" width="100%"></p>

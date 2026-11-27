@@ -22,6 +22,10 @@ Built by team **Satu Orang Satu Ubin** for STACK 2026 by GDGoC ITB, Case 1: Smar
 
 <p align="center"><img src="docs/assets/screens.png" alt="Nikklas screens: entry, study sessions feed, session room with members, meeting place and chat, and the create-session form" width="100%"></p>
 
+<p align="center"><img src="docs/assets/screens-dark.png" alt="The same four screens in dark mode: warm dark ground with clay and peach accents" width="100%"></p>
+
+<p align="center"><sub>Light and dark, both WCAG 2.2 AA. Dark follows the device, or pick it in Settings.</sub></p>
+
 ## How it works
 
 ```mermaid

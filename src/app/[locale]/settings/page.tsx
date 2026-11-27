@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, usePathname, Link } from '@/i18n/navigation';
 import { getCurrentUser, getUserProfile, signOut } from '@/lib/auth';
 import { Profile } from '@/types/database';
+import { setTheme, useThemeChoice } from '@/lib/theme';
 import AppHeader from '@/components/AppHeader';
 import BottomNav from '@/components/BottomNav';
 
@@ -19,6 +20,7 @@ export default function SettingsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const themeChoice = useThemeChoice();
 
   useEffect(() => {
     async function loadData() {
@@ -182,6 +184,30 @@ export default function SettingsPage() {
                 >
                   <span>English</span>
                 </button>
+              </div>
+            </section>
+
+
+            {/* Appearance: system, light or dark */}
+            <section className="bg-surface border border-border rounded-card p-5 shadow-card space-y-3">
+              <div>
+                <h3 className="font-display font-semibold text-[16px] text-text">{t('themeSection')}</h3>
+                <p className="text-[13px] text-muted">{t('themeDesc')}</p>
+              </div>
+              <div className="grid grid-cols-3 gap-2 pt-1" role="group" aria-label={t('themeSection')}>
+                {(['system', 'light', 'dark'] as const).map((choice) => (
+                  <button
+                    key={choice}
+                    type="button"
+                    onClick={() => setTheme(choice)}
+                    aria-pressed={themeChoice === choice}
+                    className={`h-12 rounded-control font-semibold text-[15px] border flex items-center justify-center ${
+                      themeChoice === choice ? 'bg-peach text-on-peach border-peach' : 'bg-surface text-text border-edge'
+                    }`}
+                  >
+                    {t(choice === 'system' ? 'themeSystem' : choice === 'light' ? 'themeLight' : 'themeDark')}
+                  </button>
+                ))}
               </div>
             </section>
 

@@ -5,6 +5,7 @@ import { routing } from '@/i18n/routing';
 import { Fraunces, Figtree } from 'next/font/google';
 import type { Metadata, Viewport } from 'next';
 import '../globals.css';
+import { THEME_BOOT } from '@/lib/theme';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -20,7 +21,15 @@ const figtree = Figtree({
   display: 'swap',
 });
 
-export const viewport: Viewport = { themeColor: '#FFF8F2', width: 'device-width', initialScale: 1, viewportFit: 'cover' };
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#FFF8F2' },
+    { media: '(prefers-color-scheme: dark)', color: '#1C1615' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+};
 
 export const metadata: Metadata = {
   title: 'Nikklas: find your study people',
@@ -47,7 +56,11 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={`${fraunces.variable} ${figtree.variable}`}>
+    <html lang={locale} className={`${fraunces.variable} ${figtree.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Static script, no user input: applies the saved theme before first paint. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
+      </head>
       <body className="antialiased min-h-screen">
         <NextIntlClientProvider messages={messages}>
           <div className="min-h-screen flex flex-col items-center">

@@ -75,11 +75,11 @@ export default function LandingPage() {
       </header>
 
       {/* Hero / Value Proposition */}
-      <section className="flex flex-col items-center text-center my-auto">
-        <h1 className="m-0 mb-8">
-          <Logo className="block h-12 w-auto" title={t('appName')} />
+      <section className="flex flex-col items-start text-left mt-auto mb-10">
+        <h1 className="m-0">
+          <Logo className="block h-8 w-auto" title={t('appName')} />
         </h1>
-        <h2 className="font-display font-normal text-[32px] leading-[1.12] text-text max-w-[300px]">
+        <h2 className="mt-8 font-display font-normal text-[42px] leading-[1.05] tracking-tight text-text">
           {t('tagline')}
         </h2>
         <p className="mt-4 text-text-2 text-[16px] leading-[1.5] max-w-[320px]">

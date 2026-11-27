@@ -59,3 +59,38 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
+
+/* ---- Dark mode (brand v1.1 dark): warm ink ground, clay and peach accents, every pair WCAG AA ---- */
+:root { color-scheme: light; }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #1C1615;
+  --color-surface: #251D1B;
+  --color-sand: #302623;
+  --color-border: #3A2E2B;
+  --color-edge: #8A7770;          /* 3.9:1 on surface */
+  --color-grid-line: #271F1D;
+  --color-text: #F6EEE8;          /* 15.6:1 */
+  --color-text-2: #DCCDC5;        /* 11.6:1 */
+  --color-muted: #B5A39C;         /* 7.4:1 */
+  --color-primary: #E57A5E;       /* clay, lifted for dark */
+  --color-on-primary: #1C1615;    /* 6.2:1 on clay */
+  --color-primary-text: #F29A80;  /* 8.3:1 */
+  --color-tag-bg: #302623;
+  --color-tag-text: #DCCDC5;
+  --color-success-text: #86EFAC;
+  --color-success-bg: #14301F;
+  --color-error-text: #FCA5A5;
+  --color-error-bg: #3A1A17;
+  --shadow-card: 0 1px 0 rgba(0, 0, 0, 0.25);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-bg: #1C1615; --color-surface: #251D1B; --color-sand: #302623; --color-border: #3A2E2B;
+    --color-edge: #8A7770; --color-grid-line: #271F1D; --color-text: #F6EEE8; --color-text-2: #DCCDC5;
+    --color-muted: #B5A39C; --color-primary: #E57A5E; --color-on-primary: #1C1615; --color-primary-text: #F29A80;
+    --color-tag-bg: #302623; --color-tag-text: #DCCDC5; --color-success-text: #86EFAC; --color-success-bg: #14301F;
+    --color-error-text: #FCA5A5; --color-error-bg: #3A1A17; --shadow-card: 0 1px 0 rgba(0, 0, 0, 0.25);
+  }
+}

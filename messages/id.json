@@ -185,6 +185,11 @@
     "guestNoticeBody": "Akun tamumu tersimpan di browser ini. Nomor telepon dan email aslimu tidak pernah disimpan atau dibagikan. Verifikasi email resmi kampus (.ac.id) adalah langkah pengembangan berikutnya.",
     "signOut": "Keluar dari akun tamu",
     "signOutConfirm": "Keluar dari akun tamu? Sesimu di browser ini akan hilang.",
-    "editProfile": "Ubah profil"
+    "editProfile": "Ubah profil",
+    "themeSection": "Tampilan",
+    "themeDesc": "Pilih tema terang, gelap, atau ikuti perangkatmu",
+    "themeSystem": "Sistem",
+    "themeLight": "Terang",
+    "themeDark": "Gelap"
   }
 }

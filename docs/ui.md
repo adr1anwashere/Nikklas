@@ -4,6 +4,17 @@
 >
 > Also in v1.1: inputs use 16 px text (no iOS zoom), every tap target is at least 44 px, line icons replace emoji, bottom sheets close on Escape or a tap outside, and errors are linked to their fields with `aria-describedby`.
 
+> **v1.2.** Dark mode: the same token names get dark values under `:root[data-theme="dark"]` and `prefers-color-scheme: dark` (see `src/app/globals.css`). Components never hardcode colours, so they switch on their own.
+
+| Token | Light | Dark | Dark contrast |
+| --- | --- | --- | --- |
+| `bg` / `surface` / `sand` | #FFF8F2 / #FFFFFF / #F7ECE3 | #1C1615 / #251D1B / #302623 | |
+| `text` / `text-2` / `muted` | #2B2220 / #5A4A46 / #6E5D58 | #F6EEE8 / #DCCDC5 / #B5A39C | 15.6 / 11.6 / 7.4 : 1 |
+| `primary` / `on-primary` | #A8402A / #FFFFFF | #E57A5E / #1C1615 | 6.2 : 1 |
+| `primary-text` | #A8402A | #F29A80 | 8.3 : 1 |
+| `edge` | #9C8A84 | #8A7770 | 3.9 : 1 |
+| `peach` / `on-peach` | #F4A58A / #3B1F1A | unchanged | 7.6 : 1 |
+
 <p align="center"><img src="assets/palette.png" alt="Nikklas palette: clay, ink, peach, cream, sand, muted, edge" width="100%"></p>
 
 

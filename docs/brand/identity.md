@@ -39,6 +39,18 @@ competes with the student's own words.
 
 **Banned pairs:** clay on peach (3.09:1), white on peach (1.98:1), peach text on cream (1.88:1), muted on peach (3.14:1), hairline as an input border (1.34:1).
 
+## 03b Dark mode
+Same token names, dark values. The ground is warm ink, never pure black; clay is lifted to #E57A5E so a dark label reads on it (6.2:1); peach and its label stay the same.
+
+| Token | Dark | Contrast |
+| --- | --- | --- |
+| bg / surface / sand | #1C1615 / #251D1B / #302623 | |
+| text / text-2 / muted | #F6EEE8 / #DCCDC5 / #B5A39C | 15.6 / 11.6 / 7.4 : 1 on bg |
+| primary / on-primary | #E57A5E / #1C1615 | 6.2 : 1 |
+| primary-text | #F29A80 | 8.3 : 1 on bg |
+| edge | #8A7770 | 3.9 : 1 on surface |
+| success / error | #86EFAC on #14301F · #FCA5A5 on #3A1A17 | 10.2 · 8.3 : 1 |
+
 ## 04 Typography
 | Family | Cut | Used for |
 | --- | --- | --- |
