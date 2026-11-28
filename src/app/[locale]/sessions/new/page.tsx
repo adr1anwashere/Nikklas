@@ -109,7 +109,7 @@ export default function CreateSessionPage() {
         section: result.data.section,
         exam_period: result.data.exam_period,
         topic_tags: result.data.topic_tags,
-        starts_at: result.data.starts_at,
+        starts_at: new Date(result.data.starts_at).toISOString(),
         max_size: result.data.max_size,
       });
 

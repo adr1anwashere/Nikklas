@@ -1,40 +1,19 @@
-import { createClient as createBrowserClient } from '@/lib/supabase/client';
+'use server';
+import { z } from 'zod';
+import * as store from '@/lib/server/store';
+import { requireViewer } from '@/lib/server/viewer';
+import { meetingPlaceSchema } from '@/lib/validation/meeting-place';
 import { MeetingPlace } from '@/types/database';
-import { getCurrentUser } from '@/lib/auth';
 
 export interface MeetingPlaceWithAuthor extends MeetingPlace {
   author_nickname?: string;
 }
 
+const id = z.string().min(1).max(64);
+
 export async function fetchMeetingPlace(sessionId: string): Promise<MeetingPlaceWithAuthor | null> {
-  const supabase = createBrowserClient();
-  const { data, error } = await supabase
-    .from('meeting_places')
-    .select('*')
-    .eq('session_id', sessionId)
-    .maybeSingle();
-
-  if (error || !data) {
-    return null;
-  }
-
-  let authorNickname = 'Mahasiswa';
-  if (data.updated_by) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('nickname')
-      .eq('id', data.updated_by)
-      .maybeSingle();
-
-    if (profile?.nickname) {
-      authorNickname = profile.nickname;
-    }
-  }
-
-  return {
-    ...data,
-    author_nickname: authorNickname,
-  };
+  const viewer = await requireViewer();
+  return store.getMeetingPlace(viewer, id.parse(sessionId)) as unknown as MeetingPlaceWithAuthor | null;
 }
 
 export async function upsertMeetingPlace(
@@ -42,50 +21,12 @@ export async function upsertMeetingPlace(
   description: string,
   mapUrl?: string
 ): Promise<MeetingPlaceWithAuthor> {
-  const supabase = createBrowserClient();
-  const user = await getCurrentUser();
-  if (!user) {
-    throw new Error('Not authenticated');
-  }
-
-  const trimmedDesc = description.trim();
-  const trimmedUrl = mapUrl && mapUrl.trim() ? mapUrl.trim() : null;
-
-  if (!trimmedDesc || trimmedDesc.length < 2) {
-    throw new Error('Description too short');
-  }
-
-  if (trimmedUrl && !/^https:\/\//i.test(trimmedUrl)) {
-    throw new Error('Map URL must start with https://');
-  }
-
-  const payload = {
-    session_id: sessionId,
-    description: trimmedDesc,
-    map_url: trimmedUrl,
-    updated_by: user.id,
-    updated_at: new Date().toISOString(),
-  };
-
-  const { data, error } = await supabase
-    .from('meeting_places')
-    .upsert(payload)
-    .select()
-    .single();
-
-  if (error) {
-    throw error;
-  }
-
-  // Get current user profile nickname
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('nickname')
-    .eq('id', user.id)
-    .maybeSingle();
-
-  return {
-    ...data,
-    author_nickname: profile?.nickname || 'Mahasiswa',
-  };
+  const viewer = await requireViewer();
+  const place = meetingPlaceSchema.parse({ description, map_url: mapUrl ?? '' });
+  return store.saveMeetingPlace(
+    viewer,
+    id.parse(sessionId),
+    place.description,
+    place.map_url || null
+  ) as unknown as MeetingPlaceWithAuthor;
 }

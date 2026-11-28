@@ -1,54 +1,54 @@
+'use server';
 // Auth module isolating all sign-in and session logic
 // Follows blueprint.md Section 4 & agent.md Section 3 & 6
-import { createClient as createBrowserClient } from '@/lib/supabase/client';
-import { Profile, AppLocale } from '@/types/database';
+import { cookies, headers } from 'next/headers';
+import { z } from 'zod';
+import * as store from '@/lib/server/store';
+import { COOKIE, requireViewer, viewerId } from '@/lib/server/viewer';
+import { profileSchema } from '@/lib/validation/profile';
+import { Profile, AppLocale, User } from '@/types/database';
 
-export async function signInAsGuest() {
-  const supabase = createBrowserClient();
-  const { data, error } = await supabase.auth.signInAnonymously();
-  if (error) {
-    throw error;
-  }
-  return data;
+// ponytail: in-memory limit, resets on restart; move to the database if there is ever more than one process
+const recent = new Map<string, number[]>();
+const GUESTS_PER_HOUR = 60; // generous because a whole campus can share one address
+
+export async function signInAsGuest(): Promise<{ user: User }> {
+  const existing = await viewerId();
+  if (existing) return { user: { id: existing } };
+
+  const address = (await headers()).get('cf-connecting-ip') ?? 'local';
+  const hourAgo = Date.now() - 3_600_000;
+  const hits = (recent.get(address) ?? []).filter((t) => t > hourAgo);
+  if (hits.length >= GUESTS_PER_HOUR) throw new Error('Too many new guests from this network');
+  recent.set(address, [...hits, Date.now()]);
+
+  const { id, token } = store.createGuest();
+  (await cookies()).set(COOKIE, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 60 * 60 * 24 * 365,
+  });
+  return { user: { id } };
 }
 
-export async function signOut() {
-  const supabase = createBrowserClient();
-  const { error } = await supabase.auth.signOut();
-  if (error) {
-    throw error;
-  }
+export async function signOut(): Promise<void> {
+  const id = await viewerId();
+  if (id) store.endSession(id);
+  (await cookies()).delete(COOKIE);
 }
 
-export async function getCurrentUser() {
-  const supabase = createBrowserClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
-  if (error || !user) {
-    return null;
-  }
-  return user;
+export async function getCurrentUser(): Promise<User | null> {
+  const id = await viewerId();
+  return id ? { id } : null;
 }
 
 export async function getUserProfile(userId?: string): Promise<Profile | null> {
-  const supabase = createBrowserClient();
-  let targetId = userId;
-  if (!targetId) {
-    const user = await getCurrentUser();
-    if (!user) return null;
-    targetId = user.id;
-  }
-
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', targetId)
-    .maybeSingle();
-
-  if (error) {
-    console.error('Failed to fetch user profile:', error.message);
-    return null;
-  }
-  return data as Profile | null;
+  const viewer = await viewerId();
+  if (!viewer) return null;
+  const target = userId === undefined ? viewer : z.string().parse(userId);
+  return store.getProfile(viewer, target) as unknown as Profile | null;
 }
 
 export async function saveUserProfile(data: {
@@ -58,30 +58,8 @@ export async function saveUserProfile(data: {
   topic_tags: string[];
   locale?: AppLocale;
 }): Promise<Profile> {
-  const supabase = createBrowserClient();
-  const user = await getCurrentUser();
-  if (!user) {
-    throw new Error('Not authenticated');
-  }
-
-  const payload = {
-    id: user.id,
-    nickname: data.nickname,
-    major: data.major,
-    year: data.year,
-    topic_tags: data.topic_tags,
-    locale: data.locale || 'id',
-    updated_at: new Date().toISOString(),
-  };
-
-  const { data: profile, error } = await supabase
-    .from('profiles')
-    .upsert(payload)
-    .select()
-    .single();
-
-  if (error) {
-    throw error;
-  }
-  return profile as Profile;
+  const viewer = await requireViewer();
+  const profile = profileSchema.parse(data);
+  const locale = z.enum(['id', 'en']).parse(data.locale ?? 'id');
+  return store.saveProfile(viewer, { ...profile, locale }) as unknown as Profile;
 }

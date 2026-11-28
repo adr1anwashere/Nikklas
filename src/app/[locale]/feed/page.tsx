@@ -12,9 +12,8 @@ import {
   joinSession,
   SessionFilters,
 } from '@/lib/sessions';
-import { Profile, SessionFeedItem, Course } from '@/types/database';
+import { Profile, SessionFeedItem, Course, User } from '@/types/database';
 import AppHeader from '@/components/AppHeader';
-import type { User } from '@supabase/supabase-js';
 import SessionCard from '@/components/SessionCard';
 import FilterBar from '@/components/FilterBar';
 import BottomNav from '@/components/BottomNav';

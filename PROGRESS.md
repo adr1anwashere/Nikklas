@@ -16,6 +16,15 @@
 | Languages | Every screen in Bahasa Indonesia and English | 0 to 6 |
 | v1.1 | Brand, UX and security pass (below) | v1.1 |
 
+## Self-hosted backend (28 Nov 2026)
+
+- Supabase removed. One Next.js process and one SQLite file (`node:sqlite`) on a self-hosted server.
+- Access rules moved from RLS policies to `src/lib/server/store.ts`. The earlier hardening migration is no longer needed.
+- Live updates now poll (chat 3 s, members and meeting place 5 s).
+- `npm test`: access rules, value limits, feed filters and an 8-process race for the last seat.
+
+The sections below describe the earlier Supabase build.
+
 ## v1.2 (25 Nov 2026, evening)
 
 <p align="center"><img src="docs/assets/screens-dark.png" alt="The same four screens in dark mode: warm dark ground with clay and peach accents" width="100%"></p>
@@ -53,8 +62,6 @@
 
 | Item | Owner | When |
 | --- | --- | --- |
-| Run the hardening migration on the live Supabase project | Adhi | Before the video shoot |
-| Scripted last-seat concurrency test | Rofi | Milestone 2 |
 | Pilot: 7 students, 2 weeks, 3 measures ([plan](docs/pilot-plan.md)) | Fathir, Rofi | 1 to 15 Dec |
 | Verified `.ac.id` sign-in | Adhi | Final Day |
 | Report user or session, moderation table | Adhi, Haidar | Final Day |

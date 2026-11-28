@@ -6,9 +6,8 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { fetchMySessions } from '@/lib/sessions';
-import { SessionFeedItem } from '@/types/database';
+import { SessionFeedItem, User } from '@/types/database';
 import AppHeader from '@/components/AppHeader';
-import type { User } from '@supabase/supabase-js';
 import SessionCard from '@/components/SessionCard';
 import BottomNav from '@/components/BottomNav';
 

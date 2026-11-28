@@ -3,7 +3,6 @@
 import Icon from '@/components/Icon';
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
-import { createClient as createBrowserClient } from '@/lib/supabase/client';
 import { Message } from '@/types/database';
 import { fetchMessages, sendMessage, RoomMember } from '@/lib/chat';
 
@@ -33,48 +32,27 @@ export default function ChatPanel({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // 1. Initial messages fetch
+  // 1 and 2. Load messages, then poll every 3 seconds while the tab is visible
   useEffect(() => {
-    async function initMessages() {
+    let active = true;
+    async function load() {
       try {
         const msgs = await fetchMessages(sessionId);
-        setMessages(msgs);
+        // keep the same array when nothing is new, so the list does not auto-scroll on every poll
+        if (active) setMessages((prev) => (msgs.length === prev.length ? prev : msgs));
       } catch (err) {
         console.error('Error fetching room messages:', err);
       } finally {
-        setIsLoading(false);
+        if (active) setIsLoading(false);
       }
     }
-
-    initMessages();
-  }, [sessionId]);
-
-  // 2. Realtime WebSocket subscription
-  useEffect(() => {
-    const supabase = createBrowserClient();
-    const channel = supabase
-      .channel(`realtime_room_${sessionId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'messages',
-          filter: `session_id=eq.${sessionId}`,
-        },
-        (payload) => {
-          const newMsg = payload.new as Message;
-          setMessages((prev) => {
-            // Deduplicate
-            if (prev.some((m) => m.id === newMsg.id)) return prev;
-            return [...prev, newMsg];
-          });
-        }
-      )
-      .subscribe();
-
+    load();
+    const timer = setInterval(() => {
+      if (!document.hidden) load();
+    }, 3000);
     return () => {
-      supabase.removeChannel(channel);
+      active = false;
+      clearInterval(timer);
     };
   }, [sessionId]);
 
@@ -102,7 +80,7 @@ export default function ChatPanel({
     try {
       const createdMsg = await sendMessage(sessionId, trimmed);
       setInputText('');
-      // Optimistically append if realtime is slightly delayed
+      // Show it now instead of waiting for the next poll
       setMessages((prev) => {
         if (prev.some((m) => m.id === createdMsg.id)) return prev;
         return [...prev, createdMsg];

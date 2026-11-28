@@ -1,7 +1,7 @@
 <p align="center"><img src="docs/assets/banners/readme.png" alt="Nikklas: readme" width="100%"></p>
 
 <p align="center">
-  <a href="https://nikklas.vercel.app"><b>Open the app</b></a> ·
+  <a href="https://nikklas.web.id"><b>Open the app</b></a> ·
   <a href="PROGRESS.md">Progress</a> ·
   <a href="docs/proposal/Nikklas_Proposal_v2.pdf">Proposal</a> ·
   <a href="docs/brand/README.md">Brand</a> ·
@@ -10,7 +10,7 @@
 
 <p align="center">
   <img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-2B2220?logo=nextdotjs&logoColor=white">
-  <img alt="Supabase" src="https://img.shields.io/badge/Supabase-Postgres%20%2B%20RLS-A8402A?logo=supabase&logoColor=white">
+  <img alt="SQLite" src="https://img.shields.io/badge/SQLite-built%20into%20Node-A8402A?logo=sqlite&logoColor=white">
   <img alt="Tailwind CSS 4" src="https://img.shields.io/badge/Tailwind-4-5A4A46?logo=tailwindcss&logoColor=white">
   <img alt="WCAG 2.2 AA" src="https://img.shields.io/badge/WCAG-2.2%20AA-166534">
   <img alt="Languages" src="https://img.shields.io/badge/i18n-ID%20%C2%B7%20EN-6E5D58">
@@ -32,9 +32,19 @@ Built by team **Satu Orang Satu Ubin** for STACK 2026 by GDGoC ITB, Case 1: Smar
 
 ## Architecture
 
-<p align="center"><img src="docs/assets/diagrams/architecture.png" alt="Architecture: a Next.js client talking to Supabase Postgres with RLS, the join_session function, Realtime and anonymous auth" width="100%"></p>
+One Next.js process on a self-hosted server. Data lives in one SQLite file through `node:sqlite`.
 
-Details: [security and data model](docs/security.md) · [blueprint](docs/blueprint.md) · [UI spec](docs/ui.md).
+```mermaid
+flowchart LR
+  B[Mobile browser] -->|HTTPS| CF[Cloudflare Tunnel]
+  CF --> N[Next.js server actions]
+  N -->|httpOnly guest cookie| A[Access rules in store.ts]
+  A --> D[(SQLite file)]
+```
+
+The open session room asks for new messages every 3 seconds, and for members and the meeting place every 5 seconds.
+
+Details: [security and data model](docs/security.md) · [blueprint](docs/blueprint.md) · [UI spec](docs/ui.md). The blueprint and phase logs describe the first Supabase build.
 
 ## Status
 
@@ -44,18 +54,15 @@ Done: guest access and profiles, sessions and feed, database filters and one-tap
 
 ## Run it locally
 
-1. `npm install`
-2. Create a project on [supabase.com](https://supabase.com) and turn on **Authentication → Sign In / Providers → Allow anonymous sign-ins**.
-3. `cp .env.example .env.local` and fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (Project Settings → API).
-4. In the Supabase SQL Editor, run the files in `supabase/migrations/` in name order, then enable Realtime:
-   ```sql
-   alter publication supabase_realtime add table public.messages;
-   alter publication supabase_realtime add table public.meeting_places;
-   ```
-5. Run `supabase/seed.sql` for the four courses and labelled sample sessions (the cleanup line at its top removes them before a pilot).
-6. `npm run dev` and open [localhost:3000](http://localhost:3000).
+Needs Node 22.14 or newer (`npm test` needs 22.18 or newer). No account and no environment file.
 
-Checks: `npm run lint` and `npx tsc --noEmit` (both 0 errors), `npm run build`.
+1. `npm install`
+2. `npm run seed` for labelled sample sessions (optional; remove them with `delete from users where id like 'demo-%';`).
+3. `npm run dev` and open [localhost:3000](http://localhost:3000).
+
+The database is created at `data/nikklas.db`. Set `NIKKLAS_DB` to store it elsewhere. The guest cookie is `Secure` in production, so serve a production build over HTTPS.
+
+Checks: `npm test` (access rules and the last-seat race), `npm run lint`, `npx tsc --noEmit`, `npm run build`.
 
 ## Repository
 
@@ -67,8 +74,9 @@ docs/
   proposal/      semifinal proposal v2 (current) and v1
   video/         semifinal video scripts and teleprompters
 messages/        id.json, en.json
-src/             app routes, components, lib (auth, sessions, chat, meeting-place, validation)
-supabase/        migrations and seed
+src/             app routes, components, lib (auth, sessions, chat, meeting-place, validation, server)
+db/              schema and sample data
+test/            access rules and concurrency tests
 PROGRESS.md      what is done and what is next
 ```
 
@@ -83,11 +91,12 @@ PROGRESS.md      what is done and what is next
 
 ## Third-party resources and AI assistance
 
-Next.js and React (MIT), Supabase (Apache 2.0), Tailwind CSS (MIT), next-intl (MIT), Zod (MIT), Fraunces and Figtree (SIL Open Font License 1.1).
+Next.js and React (MIT), SQLite (public domain), Tailwind CSS (MIT), next-intl (MIT), Zod (MIT), Fraunces and Figtree (SIL Open Font License 1.1).
 
 Material AI assistance, as the STACK 2026 rules require:
 
 - **Google Antigravity with Gemini** helped scaffold TypeScript and React code, draft the message files and write the phase logs in `docs/phases/`.
+- **Claude Code** helped with the move to the self-hosted backend, its tests and the related docs.
 - **Kiro** helped with the v1.1 brand guidelines and logo, the UI, UX and accessibility pass, the security migration, these docs and the semifinal video script.
 
 The team directed, reviewed and tested all of it and is responsible for the result.

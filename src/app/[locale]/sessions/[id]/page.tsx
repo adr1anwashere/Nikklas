@@ -4,7 +4,6 @@ import Icon from '@/components/Icon';
 import React, { useState, useEffect, use } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
-import { createClient as createBrowserClient } from '@/lib/supabase/client';
 import { getCurrentUser, signInAsGuest, getUserProfile } from '@/lib/auth';
 import {
   fetchRoomDetails,
@@ -17,9 +16,8 @@ import {
   MeetingPlaceWithAuthor,
 } from '@/lib/meeting-place';
 import { joinSession } from '@/lib/sessions';
-import { SessionFeedItem } from '@/types/database';
+import { SessionFeedItem, User } from '@/types/database';
 import BackButton from '@/components/BackButton';
-import type { User } from '@supabase/supabase-js';
 import MemberList from '@/components/MemberList';
 import MeetingPlaceCard from '@/components/MeetingPlaceCard';
 import ChatPanel from '@/components/ChatPanel';
@@ -73,7 +71,7 @@ export default function SessionRoomPage({
 
         if (memberStatus) {
           const [memberList, placeData] = await Promise.all([
-            fetchRoomMembers(sessionId, sessionData.host_id),
+            fetchRoomMembers(sessionId),
             fetchMeetingPlace(sessionId),
           ]);
           setMembers(memberList);
@@ -89,32 +87,23 @@ export default function SessionRoomPage({
     loadRoom();
   }, [sessionId, router]);
 
-  // Realtime subscription for Meeting Place updates
+  // Poll for meeting place changes and new members
   useEffect(() => {
     if (!isMember) return;
-
-    const supabase = createBrowserClient();
-    const channel = supabase
-      .channel(`realtime_mp_${sessionId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'meeting_places',
-          filter: `session_id=eq.${sessionId}`,
-        },
-        async () => {
-          // Re-fetch meeting place with author nickname
-          const updated = await fetchMeetingPlace(sessionId);
-          setMeetingPlace(updated);
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    const timer = setInterval(async () => {
+      if (document.hidden) return;
+      try {
+        const [memberList, placeData] = await Promise.all([
+          fetchRoomMembers(sessionId),
+          fetchMeetingPlace(sessionId),
+        ]);
+        setMembers(memberList);
+        setMeetingPlace(placeData);
+      } catch (err) {
+        console.error('Error refreshing the room:', err);
+      }
+    }, 5000);
+    return () => clearInterval(timer);
   }, [sessionId, isMember]);
 
   // Handle guest sign-in directly from the lock screen
@@ -135,7 +124,7 @@ export default function SessionRoomPage({
         setIsMember(memberStatus);
         if (memberStatus && sessionData) {
           const [memberList, placeData] = await Promise.all([
-            fetchRoomMembers(sessionId, sessionData.host_id),
+            fetchRoomMembers(sessionId),
             fetchMeetingPlace(sessionId),
           ]);
           setMembers(memberList);
@@ -158,7 +147,7 @@ export default function SessionRoomPage({
         setIsMember(true);
         if (session) {
           const [updatedMembers, placeData] = await Promise.all([
-            fetchRoomMembers(sessionId, session.host_id),
+            fetchRoomMembers(sessionId),
             fetchMeetingPlace(sessionId),
           ]);
           setMembers(updatedMembers);

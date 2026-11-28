@@ -1,8 +1,6 @@
 <p align="center"><img src="../docs/assets/banners/security.png" alt="Nikklas: security" width="100%"></p>
 
-Privacy is enforced in the database, not only in the UI. Row Level Security (RLS) is on for all six tables.
-
-<p align="center"><img src="../docs/assets/diagrams/erd.png" alt="Data model: profiles, courses, sessions, session_members, messages and meeting_places, with RLS on all six tables" width="100%"></p>
+Every read and write goes through the server. Each function in [`src/lib/server/store.ts`](../src/lib/server/store.ts) takes the user ID from the session cookie and checks access before it touches the database. The browser never talks to the database.
 
 ## Who can read what
 
@@ -10,24 +8,24 @@ Privacy is enforced in the database, not only in the UI. Row Level Security (RLS
 | --- | --- | --- |
 | `profiles` | The owner, and members of a shared session | The owner |
 | `courses` | Any signed-in user | Nobody (seeded) |
-| `sessions` | Any signed-in user, for open or full sessions | The host |
-| `session_members` | Members of that session | Only `join_session()` and the host trigger (after the v1.1 migration) |
+| `sessions` | Any signed-in user, for open or full sessions | The host creates |
+| `session_members` | Members of that session | Only the join and create functions |
 | `messages` | Members of that session | Members, as themselves |
 | `meeting_places` | Members of that session | Members |
 
 ## Joining a session
 
-<p align="center"><img src="../docs/assets/diagrams/join-sequence.png" alt="Two students tapping the last seat: the database locks the session row, one gets success and the session turns full, the other gets session_full" width="100%"></p>
+Joining runs in one `BEGIN IMMEDIATE` transaction: it takes the write lock, counts the seats and inserts. `npm test` starts 8 processes that race for the last seat and checks that exactly one wins.
 
-## November 2026 hardening
+## Guest sessions
 
-[`supabase/migrations/20261125000000_harden_join_and_feed.sql`](../supabase/migrations/20261125000000_harden_join_and_feed.sql) fixes two gaps found while checking the proposal against the code:
-
-1. **Seats could be taken without `join_session()`.** A policy let any signed-in user insert themselves into `session_members` through the REST API, skipping the capacity and status checks. The policy is removed; the join function and the host trigger are `SECURITY DEFINER` and keep working.
-2. **`sessions_feed` skipped RLS** (`security_invoker = false`) and may have been readable with the public anon key. The view now filters rows like the sessions policy and is revoked from `anon`.
-
-Run it once in the Supabase SQL Editor. The file ends with three checks for QA.
+A guest gets a random 256-bit token in an `httpOnly`, `Secure`, `SameSite=Lax` cookie. The database stores only its SHA-256 hash. Sign-out removes the hash. New guest accounts are limited to 60 per hour per network address.
 
 ## Secrets
 
-Only `NEXT_PUBLIC_SUPABASE_URL` and the public anon key reach the browser. The service key is never used in the app or committed. `.env.local` is in `.gitignore`.
+The app needs no API keys. The database file is outside the repository (`data/` is ignored by Git).
+
+## Known limits
+
+- One server and one database file, with no automatic backup yet.
+- The guest limit is held in memory and resets when the app restarts.

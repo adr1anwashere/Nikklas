@@ -10,6 +10,10 @@ export type ExamPeriod = 'quiz' | 'uts' | 'uas';
 export type SessionStatus = 'open' | 'full' | 'closed';
 export type AppLocale = 'id' | 'en';
 
+export interface User {
+  id: string;
+}
+
 export interface Profile {
   id: string;
   nickname: string;
