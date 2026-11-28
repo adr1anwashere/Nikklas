@@ -101,7 +101,7 @@
     "openRoom": "Open room",
     "alreadyMember": "Already joined",
     "fullChip": "Full",
-    "seatsLeft": "{seats} seats left",
+    "seatsLeft": "{seats, plural, one {# seat left} other {# seats left}}",
     "seatsTaken": "{current}/{max} filled",
     "hostBadge": "Host",
     "youAreHost": "You are the Host",
