@@ -106,7 +106,7 @@ export default function TagInput({ tags, onChange, maxTags = 5 }: TagInputProps)
           {tags.map((tag) => (
             <span
               key={tag}
-              className="inline-flex items-center gap-1 h-9 pl-3.5 pr-2 bg-sand text-text-2 rounded-full text-[14px] font-semibold"
+              className="chip-in inline-flex items-center gap-1 h-9 pl-3.5 pr-2 bg-sand text-text-2 rounded-full text-[14px] font-semibold"
             >
               #{tag}
               <button

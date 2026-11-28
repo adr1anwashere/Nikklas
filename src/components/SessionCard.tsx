@@ -1,5 +1,6 @@
 'use client';
-
+// A study session as a ticket: the course and its seats on the left, a torn-off date stub on the
+// right. The seats are the logo's squares: taken ones filled, open ones outlined.
 import Icon from '@/components/Icon';
 import React from 'react';
 import { useTranslations, useLocale } from 'next-intl';
@@ -24,121 +25,71 @@ export default function SessionCard({
 }: SessionCardProps) {
   const t = useTranslations('session');
   const locale = useLocale();
+  const loc = locale === 'id' ? 'id-ID' : 'en-US';
 
   const isHost = currentUserId === session.host_id;
   const isFull = session.status === 'full' || session.current_size >= session.max_size;
   const seatsRemaining = Math.max(0, session.max_size - session.current_size);
+  const inRoom = isHost || isMember;
 
-  // Format date in user's local time
-  const formattedDate = (() => {
-    try {
-      const date = new Date(session.starts_at);
-      return new Intl.DateTimeFormat(locale === 'id' ? 'id-ID' : 'en-US', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        hour: '2-digit',
-        minute: '2-digit',
-      }).format(date);
-    } catch {
-      return session.starts_at;
-    }
-  })();
+  const d = new Date(session.starts_at);
+  const valid = !isNaN(d.getTime());
+  const fmt = (o: Intl.DateTimeFormatOptions) => (valid ? new Intl.DateTimeFormat(loc, o).format(d) : '');
 
-  const examPeriodLabel = {
-    quiz: t('examPeriodQuiz'),
-    uts: 'UTS',
-    uas: 'UAS',
-  }[session.exam_period] || session.exam_period.toUpperCase();
+  const examPeriodLabel = { quiz: t('examPeriodQuiz'), uts: 'UTS', uas: 'UAS' }[session.exam_period] || session.exam_period.toUpperCase();
 
   return (
-    <article className="bg-surface border border-border rounded-card p-5 shadow-card flex flex-col justify-between space-y-4">
-      {/* 1. Header: Course Title & Section */}
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <h2 className="font-display font-semibold text-[18px] text-text leading-snug">
-            {session.course_code} {session.course_name}
-          </h2>
-          <p className="text-[14px] font-semibold text-primary-text">
-            {t('classSection', { section: session.section })}
-          </p>
+    <article className={`ticket group h-full flex rounded-card bg-surface border border-border ${isFull && !inRoom ? 'is-full' : ''}`}>
+      <div className="flex-1 min-w-0 p-5 flex flex-col gap-4">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] font-semibold whitespace-nowrap">
+          <span className="px-2 py-0.5 rounded-md bg-sand text-text tabular-nums">{session.course_code}</span>
+          <span className="text-primary-text">{t('classSection', { section: session.section })}</span>
+          <span className="text-muted">· {examPeriodLabel}</span>
+          {isHost && <span className="ml-auto text-primary-text">{t('hostBadge')}</span>}
+          {!isHost && isMember && <span className="ml-auto text-success-text">{t('alreadyMember')}</span>}
+          {isFull && !inRoom && <span className="ml-auto text-error-text">{t('fullChip')}</span>}
         </div>
 
-        {/* Status / Host Badge */}
-        <div className="flex flex-col items-end gap-1">
-          {isHost && (
-            <span className="px-2.5 py-0.5 bg-sand text-primary-text rounded-full text-[13px] font-semibold">
-              {t('hostBadge')}
-            </span>
-          )}
-          {!isHost && isMember && (
-            <span className="px-2.5 py-0.5 bg-success-bg text-success-text rounded-full text-[13px] font-semibold">
-              {t('alreadyMember')}
-            </span>
-          )}
-          {isFull && (
-            <span className="px-2.5 py-0.5 bg-error-bg text-error-text rounded-full text-[13px] font-semibold">
-              {t('fullChip')}
-            </span>
-          )}
-        </div>
-      </div>
+        <h2 className="font-display font-normal text-[22px] leading-[1.15] text-text">{session.course_name}</h2>
 
-      {/* 2. Chips: Exam Period & Topic Tags */}
-      <div className="flex flex-wrap gap-1.5">
-        <span className="px-3 py-1 bg-sand text-text rounded-full text-[13px] font-semibold">
-          {examPeriodLabel}
-        </span>
-        {session.topic_tags?.map((tag) => (
-          <span
-            key={tag}
-            className="px-3 py-1 bg-sand text-text-2 rounded-full text-[13px] font-semibold"
-          >
-            #{tag}
+        {session.topic_tags?.length > 0 && (
+          <p className="text-[14px] text-text-2 truncate">{session.topic_tags.map((x) => `#${x}`).join('  ')}</p>
+        )}
+
+        <div className="mt-auto flex items-center gap-3">
+          <div className="seat-meter flex gap-1 shrink-0" aria-hidden="true" key={session.current_size}>
+            {Array.from({ length: session.max_size }, (_, i) => (
+              <span key={i} className={`seat ${i < session.current_size ? 'seat-on' : ''}`} style={{ animationDelay: `${i * 55}ms` }} />
+            ))}
+          </div>
+          <span className="text-[13px] text-muted whitespace-nowrap">
+            {isFull ? t('seatsTaken', { current: session.current_size, max: session.max_size }) : t('seatsLeft', { seats: seatsRemaining })}
           </span>
-        ))}
-      </div>
+        </div>
 
-      {/* 3. Time & Seats Left */}
-      <div className="pt-1 border-t border-border/50 flex items-center justify-between text-[13px] text-muted">
-        <span className="flex items-center gap-1 font-medium">
-          <Icon name="calendar" /> {formattedDate}
-        </span>
-        <span className="font-semibold text-text">
-          {t('seatsTaken', { current: session.current_size, max: session.max_size })}{' '}
-          {!isFull && (
-            <span className="text-muted font-normal">
-              ({t('seatsLeft', { seats: seatsRemaining })})
-            </span>
-          )}
-        </span>
-      </div>
-
-      {/* 4. Action Button */}
-      <div className="pt-1">
-        {isHost || isMember ? (
-          <button
-            type="button"
-            onClick={() => onOpenRoomClick && onOpenRoomClick(session.id)}
-            className="w-full h-12 bg-surface border border-primary text-primary-text rounded-control font-semibold text-[15px] hover:bg-sand flex items-center justify-center gap-2 cursor-pointer"
-          >
+        {inRoom ? (
+          <button type="button" onClick={() => onOpenRoomClick?.(session.id)}
+            className="self-start h-11 px-5 rounded-full border border-primary text-primary-text font-semibold text-[14px] inline-flex items-center gap-2 cursor-pointer hover:bg-sand">
             <Icon name="chat" /> {t('openRoom')}
           </button>
         ) : isFull ? (
-          <p className="h-12 flex items-center justify-center rounded-control bg-sand text-text-2 text-[15px] font-medium">
-            {t('fullNote')}
-          </p>
+          <p className="h-11 flex items-center text-[14px] text-muted">{t('fullNote')}</p>
         ) : (
-          <button
-            type="button"
-            onClick={() => onJoinClick && onJoinClick(session.id)}
-            disabled={isJoining}
+          <button type="button" onClick={() => onJoinClick?.(session.id)} disabled={isJoining}
             aria-label={`${t('joinButton')}: ${session.course_code} ${session.course_name}, ${t('classSection', { section: session.section })}`}
-            className="w-full h-12 bg-primary text-on-primary rounded-control font-semibold text-[15px] disabled:opacity-60 flex items-center justify-center cursor-pointer"
-          >
+            className="join-btn self-start h-11 pl-5 pr-4 rounded-full bg-primary text-on-primary font-semibold text-[14px] inline-flex items-center gap-2 disabled:opacity-60 cursor-pointer">
             {isJoining ? t('joining') : t('joinButton')}
+            <span className="join-seat" aria-hidden="true" />
           </button>
         )}
+      </div>
+
+      {/* date stub, separated by a perforation */}
+      <div className="stub w-[84px] shrink-0 flex flex-col items-center justify-center gap-1 text-center px-2">
+        <span className="text-[12px] font-semibold uppercase text-muted">{fmt({ weekday: 'short' })}</span>
+        <span className="font-display text-[38px] leading-none text-text tabular-nums">{fmt({ day: 'numeric' })}</span>
+        <span className="text-[13px] font-semibold text-text-2">{fmt({ month: 'short' })}</span>
+        <span className="mt-2 text-[13px] text-primary-text font-semibold tabular-nums">{fmt({ hour: '2-digit', minute: '2-digit' })}</span>
       </div>
     </article>
   );

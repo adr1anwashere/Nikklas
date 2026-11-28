@@ -176,7 +176,7 @@ export default function CreateSessionPage() {
               >
                 {courses.map((course) => (
                   <option key={course.id} value={course.id}>
-                    {course.code} &mdash; {course.name}
+                    {course.code} · {course.name}
                   </option>
                 ))}
               </select>

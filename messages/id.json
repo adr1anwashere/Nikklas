@@ -14,7 +14,8 @@
     "indonesian": "Indonesia",
     "english": "English",
     "close": "Tutup",
-    "skip": "Lewati ke konten"
+    "skip": "Lewati ke konten",
+    "example": "Contoh"
   },
   "nav": {
     "explore": "Jelajah",
@@ -43,7 +44,10 @@
     "saveAndContinue": "Simpan dan lanjut",
     "saving": "Menyimpan...",
     "saveSuccess": "Profil berhasil disimpan!",
-    "removeTag": "Hapus topik {tag}"
+    "removeTag": "Hapus topik {tag}",
+    "next": "Lanjut",
+    "stepOf": "Langkah {step} dari {total}",
+    "yearShort": "Tahun ke"
   },
   "validation": {
     "nicknameRequired": "Nama panggilan minimal 2 karakter.",
@@ -76,7 +80,8 @@
     "activeCount": "{count} filter aktif",
     "close": "Tutup",
     "removeFilter": "Hapus filter {name}",
-    "sectionChip": "Kelas {section}"
+    "sectionChip": "Kelas {section}",
+    "all": "Semua"
   },
   "session": {
     "createTitle": "Buat sesi belajar",
@@ -191,5 +196,28 @@
     "themeSystem": "Sistem",
     "themeLight": "Terang",
     "themeDark": "Gelap"
+  },
+  "landing": {
+    "h1": "Kelompok belajar mahasiswa, per mata kuliah dan kelas",
+    "lead": "Buat atau gabung sesi untuk kuis, UTS, atau UAS. Tiap grup berisi 2 sampai 8 kursi, dan tidak ada yang melihat nomor teleponmu.",
+    "cta": "Mulai sebagai tamu",
+    "ctaNote": "Tanpa formulir daftar. Akun tamu tersimpan di browser ini.",
+    "sample": "Data contoh",
+    "howTitle": "Cara kerja sesi belajar",
+    "step1": "Cari mata kuliahmu",
+    "step1Text": "Saring menurut kode mata kuliah, kelas, periode ujian, dan topik. Hanya sesi yang masih buka yang tampil.",
+    "step2": "Ambil kursi",
+    "step2Text": "Satu ketukan mengambil kursi. Saat kursi terakhir terisi, sesi tertutup sendiri.",
+    "step3": "Ketemu di ruang sesi",
+    "step3Text": "Anggota dapat obrolan pribadi dan satu kartu tempat pertemuan dengan tautan peta.",
+    "privacyTitle": "Yang dilihat grupmu tentang kamu",
+    "privacyText": "Tiga hal, kamu yang isi. Nomor telepon, email, dan NIM tidak pernah diminta atau disimpan.",
+    "shown": "Tampil ke grupmu",
+    "never": "Tidak pernah diminta",
+    "phone": "Nomor telepon",
+    "email": "Alamat email",
+    "studentId": "NIM",
+    "closeTitle": "Ujian berikutnya tinggal satu sesi lagi",
+    "footer": "Nikklas, dibuat tim Satu Orang Satu Ubin untuk STACK 2026 oleh GDGoC ITB."
   }
 }

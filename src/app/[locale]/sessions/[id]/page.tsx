@@ -21,6 +21,7 @@ import BackButton from '@/components/BackButton';
 import MemberList from '@/components/MemberList';
 import MeetingPlaceCard from '@/components/MeetingPlaceCard';
 import ChatPanel from '@/components/ChatPanel';
+import BottomNav from '@/components/BottomNav';
 
 export default function SessionRoomPage({
   params,
@@ -253,11 +254,13 @@ export default function SessionRoomPage({
   }
 
   return (
-    <div className="flex flex-col min-h-screen pb-6 space-y-4">
+    <div className="flex flex-col min-h-screen pb-6 gap-4 lg:grid lg:grid-cols-[360px_minmax(0,1fr)] lg:gap-6 lg:items-start lg:content-start">
       {/* Top Header */}
-      <header className="flex items-center pt-1 pb-1">
+      <header className="flex items-center pt-1 pb-1 lg:col-span-2">
           <BackButton label={tCommon('back')} onClick={() => router.push('/feed')} />
         </header>
+
+      <div className="flex flex-col gap-4 lg:sticky lg:top-6">
 
       {/* Session Information Header per ui.md */}
       <section className="bg-surface border border-border rounded-card p-4 shadow-card space-y-2">
@@ -304,12 +307,17 @@ export default function SessionRoomPage({
         onUpdated={(updated) => setMeetingPlace(updated)}
       />
 
-      {/* Live Realtime Chat Panel */}
-      <ChatPanel
-        sessionId={sessionId}
-        currentUserId={currentUser.id}
-        members={members}
-      />
+      </div>
+
+      {/* Chat: fills the right column on desktop */}
+      <div className="lg:sticky lg:top-6 lg:h-[calc(100vh-7.5rem)] lg:flex lg:flex-col">
+        <ChatPanel
+          sessionId={sessionId}
+          currentUserId={currentUser.id}
+          members={members}
+        />
+      </div>
+      <BottomNav desktopOnly />
     </div>
   );
 }

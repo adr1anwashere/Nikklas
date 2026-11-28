@@ -137,10 +137,10 @@ export default function MeetingPlaceCard({
 
       {/* Modal / Bottom Sheet Form */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setIsModalOpen(false); }}>
+        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/40 md:p-6" onClick={(e) => { if (e.target === e.currentTarget) setIsModalOpen(false); }}>
           <div
             ref={sheetRef}
-            className="w-full max-w-[480px] bg-surface rounded-t-[28px] border-t border-border p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] space-y-4 max-h-[85vh] overflow-y-auto"
+            className="w-full max-w-[480px] md:max-w-[520px] bg-surface rounded-t-[28px] md:rounded-[28px] border-t md:border border-border p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] space-y-4 max-h-[85vh] overflow-y-auto"
             role="dialog"
             aria-modal="true"
             aria-labelledby="mp-title"

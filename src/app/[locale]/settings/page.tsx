@@ -5,6 +5,8 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, usePathname, Link } from '@/i18n/navigation';
 import { getCurrentUser, getUserProfile, signOut } from '@/lib/auth';
 import { Profile } from '@/types/database';
+import { smoothSwitch } from '@/components/LanguageSwitch';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import { setTheme, useThemeChoice } from '@/lib/theme';
 import AppHeader from '@/components/AppHeader';
 import BottomNav from '@/components/BottomNav';
@@ -13,6 +15,7 @@ export default function SettingsPage() {
   const t = useTranslations('settings');
   const tProfile = useTranslations('profile');
   const tCommon = useTranslations('common');
+  const tRoom = useTranslations('meetingPlace');
   const currentLocale = useLocale() as 'id' | 'en';
   const router = useRouter();
   const pathname = usePathname();
@@ -50,25 +53,26 @@ export default function SettingsPage() {
 
   const handleLanguageChange = (newLocale: 'id' | 'en') => {
     if (newLocale !== currentLocale) {
-      router.replace(pathname, { locale: newLocale });
+      smoothSwitch(() => router.replace(pathname, { locale: newLocale, scroll: false }));
     }
   };
 
-  const handleSignOut = async () => {
-    if (window.confirm(t('signOutConfirm'))) {
-      setIsSigningOut(true);
-      try {
-        await signOut();
-        router.replace('/');
-      } catch (err) {
-        console.error('Error during sign out:', err);
-        setIsSigningOut(false);
-      }
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const handleSignOut = () => setConfirmOpen(true);
+  const confirmSignOut = async () => {
+    setIsSigningOut(true);
+    try {
+      await signOut();
+      router.replace('/');
+    } catch (err) {
+      console.error('Error during sign out:', err);
+      setIsSigningOut(false);
+      setConfirmOpen(false);
     }
   };
 
   return (
-    <div className="flex flex-col min-h-screen pb-24">
+    <div className="flex flex-col min-h-screen pb-24 md:pb-12 md:max-w-2xl">
       {/* Top Header */}
       <AppHeader />
 
@@ -243,6 +247,16 @@ export default function SettingsPage() {
 
       {/* Pinned Bottom Navigation */}
       <BottomNav />
+      <ConfirmDialog
+        open={confirmOpen}
+        title={t('signOutConfirm')}
+        confirmLabel={t('signOut')}
+        cancelLabel={tRoom('cancel')}
+        busy={isSigningOut}
+        danger
+        onConfirm={confirmSignOut}
+        onCancel={() => setConfirmOpen(false)}
+      />
     </div>
   );
 }

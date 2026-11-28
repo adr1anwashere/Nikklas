@@ -114,7 +114,7 @@ export default function ChatPanel({
       </div>
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 p-4 overflow-y-auto space-y-3 min-h-[260px] max-h-[60vh]" role="log" aria-live="polite" aria-label={t('chatTitle')}>
+      <div className="flex-1 p-4 overflow-y-auto space-y-3 min-h-[260px] max-h-[60vh] lg:max-h-none" role="log" aria-live="polite" aria-label={t('chatTitle')}>
         {/* 1. Loading Skeleton: 3 skeleton bubbles per ui.md */}
         {isLoading && (
           <div className="space-y-3 animate-pulse" role="status">
@@ -141,7 +141,7 @@ export default function ChatPanel({
             return (
               <div
                 key={msg.id}
-                className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'}`}
+                className={`msg-in flex flex-col ${isOwn ? 'items-end origin-bottom-right' : 'items-start origin-bottom-left'}`}
               >
                 {/* Sender Nickname (for other members) */}
                 {!isOwn && (

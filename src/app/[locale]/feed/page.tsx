@@ -130,7 +130,7 @@ export default function FeedPage() {
   );
 
   return (
-    <div className="flex flex-col min-h-screen pb-40">
+    <div className="flex flex-col min-h-screen pb-40 md:pb-12">
       {/* Top Header */}
       <AppHeader right={profile ? <p className="text-[14px] text-muted">{t('welcome', { name: profile.nickname })}</p> : null} />
 
@@ -152,25 +152,38 @@ export default function FeedPage() {
       {/* Main Content */}
       <div className="space-y-4">
         {/* Page Title & Subtitle */}
-        <div className="space-y-0.5">
-          <h1 className="font-display font-normal text-[30px] leading-[1.15] text-text">
-            {t('title')}
-          </h1>
-          <p className="text-[15px] text-muted">
-            {t('subtitle')}
-          </p>
+        <div className="flex items-end justify-between gap-6">
+          <div className="space-y-0.5">
+            <h1 className="font-display font-normal text-[30px] md:text-[40px] leading-[1.15] text-text">
+              {t('title')}
+            </h1>
+            <p className="text-[15px] md:text-[16px] text-muted">
+              {t('subtitle')}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => router.push('/sessions/new')}
+            className="hidden md:inline-flex lg:hidden h-12 px-5 items-center gap-2 bg-primary text-on-primary font-semibold text-[15px] rounded-control cursor-pointer shrink-0"
+          >
+            <Icon name="plus" /> {t('createSession')}
+          </button>
         </div>
 
-        {/* Dynamic Filter Bar */}
-        <FilterBar
-          courses={courses}
-          activeFilters={activeFilters}
-          onFilterChange={handleFilterChange}
-        />
+        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-8 lg:items-start">
+        <div className="space-y-4 min-w-0">
+        <div className="lg:hidden">
+          <FilterBar
+            key={JSON.stringify(activeFilters)}
+            courses={courses}
+            activeFilters={activeFilters}
+            onFilterChange={handleFilterChange}
+          />
+        </div>
 
         {/* 1. Loading Skeletons */}
         {isLoading && (
-          <div className="space-y-3 pt-2" role="status" aria-label="Loading sessions">
+          <div className="grid gap-3.5 md:grid-cols-2 min-[1800px]:grid-cols-3 pt-2" role="status" aria-label="Loading sessions">
             {[1, 2, 3].map((n) => (
               <div
                 key={n}
@@ -230,7 +243,7 @@ export default function FeedPage() {
 
         {/* 4. Session Cards List */}
         {!isLoading && sessions.length > 0 && (
-          <div className="space-y-3.5 pt-1">
+          <div className="grid gap-3.5 md:grid-cols-2 min-[1800px]:grid-cols-3 pt-1">
             {sessions.map((session) => (
               <SessionCard
                 key={session.id}
@@ -247,11 +260,22 @@ export default function FeedPage() {
             ))}
           </div>
         )}
+        </div>
+        <div className="hidden lg:block">
+          <FilterBar
+            key={JSON.stringify(activeFilters)}
+            variant="panel"
+            courses={courses}
+            activeFilters={activeFilters}
+            onFilterChange={handleFilterChange}
+          />
+        </div>
+        </div>
       </div>
 
       {/* Floating Action Button: "Buat sesi" pinned above bottom nav */}
       {!isLoading && (
-        <div className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] left-0 right-0 z-20 flex justify-center pointer-events-none px-4">
+        <div className="md:hidden fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] left-0 right-0 z-20 flex justify-center pointer-events-none px-4">
           <button
             type="button"
             onClick={() => router.push('/sessions/new')}

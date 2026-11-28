@@ -11,12 +11,14 @@ interface FilterBarProps {
   courses: Course[];
   activeFilters: SessionFilters;
   onFilterChange: (filters: SessionFilters) => void;
+  variant?: 'bar' | 'panel';
 }
 
 export default function FilterBar({
   courses,
   activeFilters,
   onFilterChange,
+  variant = 'bar',
 }: FilterBarProps) {
   const t = useTranslations('filters');
   const tSession = useTranslations('session');
@@ -27,6 +29,7 @@ export default function FilterBar({
   const [selectedExam, setSelectedExam] = useState(activeFilters.exam_period || 'all');
   const [sectionQuery, setSectionQuery] = useState(activeFilters.section || '');
   const [tagQuery, setTagQuery] = useState(activeFilters.tag || '');
+
 
   const hasActiveFilters = Boolean(
     (activeFilters.course_id && activeFilters.course_id !== 'all') ||
@@ -65,6 +68,176 @@ export default function FilterBar({
 
   // Get active course name for pill
   const activeCourseName = courses.find((c) => c.id === activeFilters.course_id)?.code;
+  const idp = variant === 'panel' ? 'panel-' : '';
+
+  const formBody = (
+    <>
+      {/* 1. Filter by Course */}
+      <div className="space-y-1.5">
+        <label htmlFor={`${idp}filter-course`} className="block text-[14px] font-semibold text-text">
+          {t('filterCourse')}
+        </label>
+        <select
+          id={`${idp}filter-course`}
+          value={selectedCourse}
+          onChange={(e) => setSelectedCourse(e.target.value)}
+          className="w-full h-12 px-4 rounded-control border border-edge bg-surface text-text text-[15px] appearance-none focus:outline-none focus:ring-2 focus:ring-primary-text"
+        >
+          <option value="all">{t('allCourses')}</option>
+          {courses.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.code} · {c.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* 2. Filter by Exam Period */}
+      <fieldset className="space-y-1.5">
+        <legend className="block text-[14px] font-semibold text-text mb-1.5">
+          {t('filterExam')}
+        </legend>
+        <div className="grid grid-cols-4 lg:grid-cols-2 gap-2">
+          {[
+            { id: 'all', label: t('allPeriods') },
+            { id: 'quiz', label: tSession('examPeriodQuiz') },
+            { id: 'uts', label: 'UTS' },
+            { id: 'uas', label: 'UAS' },
+          ].map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => setSelectedExam(item.id)}
+              aria-pressed={selectedExam === item.id}
+              className={`h-11 rounded-control text-[13px] font-semibold border transition-all cursor-pointer ${
+                selectedExam === item.id
+                  ? 'bg-peach text-on-peach border-peach font-semibold shadow-xs'
+                  : 'bg-surface text-text border-edge hover:bg-sand'
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+
+      {/* 3. Filter by Section */}
+      <div className="space-y-1.5">
+        <label htmlFor={`${idp}filter-section`} className="block text-[14px] font-semibold text-text">
+          {t('filterSection')}
+        </label>
+        <input
+          id={`${idp}filter-section`}
+          type="text"
+          value={sectionQuery}
+          onChange={(e) => setSectionQuery(e.target.value)}
+          placeholder={t('filterSectionPlaceholder')}
+          className="w-full h-12 px-4 rounded-control border border-edge bg-surface text-text text-[15px] uppercase placeholder:normal-case placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary-text"
+        />
+      </div>
+
+      {/* 4. Filter by Topic Tag */}
+      <div className="space-y-1.5">
+        <label htmlFor={`${idp}filter-tag`} className="block text-[14px] font-semibold text-text">
+          {t('filterTag')}
+        </label>
+        <input
+          id={`${idp}filter-tag`}
+          type="text"
+          value={tagQuery}
+          onChange={(e) => setTagQuery(e.target.value)}
+          placeholder={t('filterTagPlaceholder')}
+          className="w-full h-12 px-4 rounded-control border border-edge bg-surface text-text text-[16px] placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary-text"
+        />
+      </div>
+
+      {/* Actions */}
+      <div className="pt-3 border-t border-border flex gap-3">
+        <button
+          type="button"
+          onClick={handleClear}
+          className="flex-1 h-12 rounded-control border border-edge bg-surface text-text font-semibold text-[15px] cursor-pointer"
+        >
+          {t('clear')}
+        </button>
+        <button
+          type="button"
+          onClick={handleApply}
+          className="flex-2 h-12 rounded-control bg-primary text-on-primary font-semibold text-[15px] cursor-pointer"
+        >
+          {t('apply')}
+        </button>
+      </div>
+    </>
+  );
+
+  if (variant === 'panel') {
+    // Desktop: filters apply the moment you pick them. Courses and periods are chips, text applies on Enter.
+    const set = (patch: SessionFilters) => onFilterChange({ ...activeFilters, ...patch });
+    const course = activeFilters.course_id ?? 'all';
+    const exam = activeFilters.exam_period ?? 'all';
+    const periods = [
+      { id: 'all', label: t('allPeriods') },
+      { id: 'quiz', label: tSession('examPeriodQuiz') },
+      { id: 'uts', label: 'UTS' },
+      { id: 'uas', label: 'UAS' },
+    ];
+    const examIndex = Math.max(0, periods.findIndex((x) => x.id === exam));
+    return (
+      <aside aria-labelledby="panel-filter-title" className="sticky top-6 space-y-7">
+        <div className="flex items-baseline justify-between">
+          <h2 id="panel-filter-title" className="font-display font-normal text-[24px] text-text">{t('title')}</h2>
+          {hasActiveFilters && (
+            <button type="button" onClick={handleClear} className="text-[14px] font-semibold text-primary-text underline-draw cursor-pointer">{t('clear')}</button>
+          )}
+        </div>
+
+        <fieldset>
+          <legend className="text-[13px] font-semibold text-muted mb-3">{t('filterCourse')}</legend>
+          <div className="flex flex-wrap gap-2">
+            {[{ id: 'all', code: t('allCourses'), name: '' }, ...courses].map((c) => {
+              const on = course === c.id;
+              return (
+                <button key={c.id} type="button" aria-pressed={on} onClick={() => set({ course_id: c.id === 'all' ? undefined : c.id })}
+                  title={c.name || undefined}
+                  className={`pick h-10 px-4 rounded-full text-[14px] font-semibold border cursor-pointer ${on ? 'is-on bg-text text-bg border-text' : 'bg-transparent text-text-2 border-border hover:border-edge'}`}>
+                  {c.code}
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend className="text-[13px] font-semibold text-muted mb-3">{t('filterExam')}</legend>
+          <div className="seg relative grid grid-cols-4 p-1 rounded-full bg-sand">
+            <span aria-hidden="true" className="seg-thumb absolute top-1 bottom-1 left-1 w-[calc(25%-2px)] rounded-full bg-surface shadow-sm"
+              style={{ transform: `translateX(${examIndex * 100}%)` }} />
+            {periods.map((x) => (
+              <button key={x.id} type="button" aria-pressed={exam === x.id} onClick={() => set({ exam_period: x.id === 'all' ? undefined : x.id })}
+                className={`relative z-10 h-9 rounded-full text-[13px] font-semibold cursor-pointer transition-colors ${exam === x.id ? 'text-text' : 'text-muted hover:text-text'}`}>
+                {x.id === 'all' ? t('all') : x.label}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+
+        {[
+          { id: 'section', label: t('filterSection'), ph: t('filterSectionPlaceholder'), v: sectionQuery, setV: setSectionQuery, upper: true },
+          { id: 'tag', label: t('filterTag'), ph: t('filterTagPlaceholder'), v: tagQuery, setV: setTagQuery, upper: false },
+        ].map((f) => (
+          <div key={f.id}>
+            <label htmlFor={`panel-filter-${f.id}`} className="block text-[13px] font-semibold text-muted mb-1">{f.label}</label>
+            <input id={`panel-filter-${f.id}`} type="text" value={f.v} placeholder={f.ph}
+              onChange={(e) => f.setV(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') set({ [f.id]: f.v.trim() || undefined }); }}
+              onBlur={() => { if ((activeFilters[f.id as 'section' | 'tag'] ?? '') !== f.v.trim()) set({ [f.id]: f.v.trim() || undefined }); }}
+              className={`bare-line w-full h-11 bg-transparent border-0 border-b border-edge rounded-none px-0 text-[16px] text-text placeholder:text-muted/70 focus:border-primary ${f.upper ? 'uppercase placeholder:normal-case' : ''}`} />
+          </div>
+        ))}
+      </aside>
+    );
+  }
 
   return (
     <div className="space-y-2">
@@ -92,7 +265,7 @@ export default function FilterBar({
 
         {/* Quick Chip: Course */}
         {activeCourseName && (
-          <span className="inline-flex items-center gap-0.5 h-11 pl-4 pr-1 bg-peach text-on-peach rounded-full shrink-0">
+          <span className="chip-in inline-flex items-center gap-0.5 h-11 pl-4 pr-1 bg-peach text-on-peach rounded-full shrink-0">
             {activeCourseName}
             <button
               type="button"
@@ -107,7 +280,7 @@ export default function FilterBar({
 
         {/* Quick Chip: Exam Period */}
         {activeFilters.exam_period && (
-          <span className="inline-flex items-center gap-0.5 h-11 pl-4 pr-1 bg-peach text-on-peach rounded-full shrink-0 uppercase">
+          <span className="chip-in inline-flex items-center gap-0.5 h-11 pl-4 pr-1 bg-peach text-on-peach rounded-full shrink-0 uppercase">
             {activeFilters.exam_period}
             <button
               type="button"
@@ -122,7 +295,7 @@ export default function FilterBar({
 
         {/* Quick Chip: Section */}
         {activeFilters.section && (
-          <span className="inline-flex items-center gap-0.5 h-11 pl-4 pr-1 bg-peach text-on-peach rounded-full shrink-0">
+          <span className="chip-in inline-flex items-center gap-0.5 h-11 pl-4 pr-1 bg-peach text-on-peach rounded-full shrink-0">
             {t('sectionChip', { section: activeFilters.section })}
             <button
               type="button"
@@ -137,7 +310,7 @@ export default function FilterBar({
 
         {/* Quick Chip: Tag */}
         {activeFilters.tag && (
-          <span className="inline-flex items-center gap-0.5 h-11 pl-4 pr-1 bg-peach text-on-peach rounded-full shrink-0">
+          <span className="chip-in inline-flex items-center gap-0.5 h-11 pl-4 pr-1 bg-peach text-on-peach rounded-full shrink-0">
             #{activeFilters.tag}
             <button
               type="button"
@@ -164,10 +337,10 @@ export default function FilterBar({
 
       {/* Bottom Sheet Filter Modal */}
       {isSheetOpen && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setIsSheetOpen(false); }}>
+        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/40 md:p-6" onClick={(e) => { if (e.target === e.currentTarget) setIsSheetOpen(false); }}>
           <div
             ref={sheetRef}
-            className="w-full max-w-[480px] bg-surface rounded-t-[28px] border-t border-border p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] space-y-5 max-h-[85vh] overflow-y-auto"
+            className="w-full max-w-[480px] md:max-w-[520px] bg-surface rounded-t-[28px] md:rounded-[28px] border-t md:border border-border p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] space-y-5 max-h-[85vh] overflow-y-auto"
             role="dialog"
             aria-modal="true"
             aria-labelledby="filter-title"
@@ -187,102 +360,7 @@ export default function FilterBar({
               </button>
             </div>
 
-            {/* 1. Filter by Course */}
-            <div className="space-y-1.5">
-              <label htmlFor="filter-course" className="block text-[14px] font-semibold text-text">
-                {t('filterCourse')}
-              </label>
-              <select
-                id="filter-course"
-                value={selectedCourse}
-                onChange={(e) => setSelectedCourse(e.target.value)}
-                className="w-full h-12 px-4 rounded-control border border-edge bg-surface text-text text-[15px] appearance-none focus:outline-none focus:ring-2 focus:ring-primary-text"
-              >
-                <option value="all">{t('allCourses')}</option>
-                {courses.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.code} &mdash; {c.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* 2. Filter by Exam Period */}
-            <fieldset className="space-y-1.5">
-              <legend className="block text-[14px] font-semibold text-text mb-1.5">
-                {t('filterExam')}
-              </legend>
-              <div className="grid grid-cols-4 gap-2">
-                {[
-                  { id: 'all', label: t('allPeriods') },
-                  { id: 'quiz', label: tSession('examPeriodQuiz') },
-                  { id: 'uts', label: 'UTS' },
-                  { id: 'uas', label: 'UAS' },
-                ].map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => setSelectedExam(item.id)}
-                    aria-pressed={selectedExam === item.id}
-                    className={`h-11 rounded-control text-[13px] font-semibold border transition-all cursor-pointer ${
-                      selectedExam === item.id
-                        ? 'bg-peach text-on-peach border-peach font-semibold shadow-xs'
-                        : 'bg-surface text-text border-edge hover:bg-sand'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
-
-            {/* 3. Filter by Section */}
-            <div className="space-y-1.5">
-              <label htmlFor="filter-section" className="block text-[14px] font-semibold text-text">
-                {t('filterSection')}
-              </label>
-              <input
-                id="filter-section"
-                type="text"
-                value={sectionQuery}
-                onChange={(e) => setSectionQuery(e.target.value)}
-                placeholder={t('filterSectionPlaceholder')}
-                className="w-full h-12 px-4 rounded-control border border-edge bg-surface text-text text-[15px] uppercase placeholder:normal-case placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary-text"
-              />
-            </div>
-
-            {/* 4. Filter by Topic Tag */}
-            <div className="space-y-1.5">
-              <label htmlFor="filter-tag" className="block text-[14px] font-semibold text-text">
-                {t('filterTag')}
-              </label>
-              <input
-                id="filter-tag"
-                type="text"
-                value={tagQuery}
-                onChange={(e) => setTagQuery(e.target.value)}
-                placeholder={t('filterTagPlaceholder')}
-                className="w-full h-12 px-4 rounded-control border border-edge bg-surface text-text text-[16px] placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary-text"
-              />
-            </div>
-
-            {/* Actions */}
-            <div className="pt-3 border-t border-border flex gap-3">
-              <button
-                type="button"
-                onClick={handleClear}
-                className="flex-1 h-12 rounded-control border border-edge bg-surface text-text font-semibold text-[15px] cursor-pointer"
-              >
-                {t('clear')}
-              </button>
-              <button
-                type="button"
-                onClick={handleApply}
-                className="flex-2 h-12 rounded-control bg-primary text-on-primary font-semibold text-[15px] cursor-pointer"
-              >
-                {t('apply')}
-              </button>
-            </div>
+            {formBody}
           </div>
         </div>
       )}

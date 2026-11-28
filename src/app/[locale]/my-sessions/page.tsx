@@ -43,20 +43,20 @@ export default function MySessionsPage() {
   }, [router]);
 
   return (
-    <div className="flex flex-col min-h-screen pb-24">
+    <div className="flex flex-col min-h-screen pb-24 md:pb-12">
       {/* Top Header */}
       <AppHeader />
 
       {/* Main Content */}
       <div className="space-y-4">
         <div className="space-y-0.5">
-          <h1 className="font-display font-normal text-[30px] leading-[1.15] text-text">{t('title')}</h1>
+          <h1 className="font-display font-normal text-[30px] md:text-[40px] leading-[1.15] text-text">{t('title')}</h1>
           <p className="text-[15px] text-muted">{t('subtitle')}</p>
         </div>
 
         {/* 1. Loading Skeletons */}
         {isLoading && (
-          <div className="space-y-3" role="status" aria-label="Loading my sessions">
+          <div className="grid gap-3.5 md:grid-cols-2 xl:grid-cols-3" role="status" aria-label="Loading my sessions">
             {[1, 2].map((n) => (
               <div
                 key={n}
@@ -92,7 +92,7 @@ export default function MySessionsPage() {
 
         {/* 3. My Sessions List */}
         {!isLoading && sessions.length > 0 && (
-          <div className="space-y-3.5">
+          <div className="grid gap-3.5 md:grid-cols-2 xl:grid-cols-3">
             {sessions.map((session) => (
               <SessionCard
                 key={session.id}

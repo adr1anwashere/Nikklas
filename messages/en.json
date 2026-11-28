@@ -14,7 +14,8 @@
     "indonesian": "Indonesia",
     "english": "English",
     "close": "Close",
-    "skip": "Skip to content"
+    "skip": "Skip to content",
+    "example": "Example"
   },
   "nav": {
     "explore": "Explore",
@@ -43,7 +44,10 @@
     "saveAndContinue": "Save and continue",
     "saving": "Saving...",
     "saveSuccess": "Profile saved successfully!",
-    "removeTag": "Remove topic {tag}"
+    "removeTag": "Remove topic {tag}",
+    "next": "Next",
+    "stepOf": "Step {step} of {total}",
+    "yearShort": "Year"
   },
   "validation": {
     "nicknameRequired": "Nickname must be at least 2 characters.",
@@ -76,7 +80,8 @@
     "activeCount": "{count} active filters",
     "close": "Close",
     "removeFilter": "Remove filter {name}",
-    "sectionChip": "Section {section}"
+    "sectionChip": "Section {section}",
+    "all": "All"
   },
   "session": {
     "createTitle": "Create a study session",
@@ -191,5 +196,28 @@
     "themeSystem": "System",
     "themeLight": "Light",
     "themeDark": "Dark"
+  },
+  "landing": {
+    "h1": "Study groups for university students, by course and class",
+    "lead": "Post or join a session for your quiz, midterm or final. Every group has 2 to 8 seats, and nobody sees your phone number.",
+    "cta": "Start as a guest",
+    "ctaNote": "No sign-up form. Your guest account stays in this browser.",
+    "sample": "Sample data",
+    "howTitle": "How a study session works",
+    "step1": "Find your course",
+    "step1Text": "Filter by course code, class section, exam period and topic. Only open sessions show.",
+    "step2": "Take a seat",
+    "step2Text": "One tap claims a seat. When the last seat goes, the session closes itself.",
+    "step3": "Meet in the room",
+    "step3Text": "Members get a private chat and one meeting place card with a map link.",
+    "privacyTitle": "What your group sees about you",
+    "privacyText": "Three things, set by you. No phone number, email or student ID is asked for or stored.",
+    "shown": "Shown to your group",
+    "never": "Never asked",
+    "phone": "Phone number",
+    "email": "Email address",
+    "studentId": "Student ID",
+    "closeTitle": "Your next exam is a session away",
+    "footer": "Nikklas, built by team Satu Orang Satu Ubin for STACK 2026 by GDGoC ITB."
   }
 }
